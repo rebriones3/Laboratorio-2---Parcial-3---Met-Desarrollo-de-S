@@ -1,0 +1,40 @@
+# Compilados
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+*~
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporales
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# Build
+build/
+dist/
+out/

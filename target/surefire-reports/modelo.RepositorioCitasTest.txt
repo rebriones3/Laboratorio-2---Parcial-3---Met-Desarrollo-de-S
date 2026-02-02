@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: modelo.RepositorioCitasTest
 -------------------------------------------------------------------------------
-Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s - in modelo.RepositorioCitasTest
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s - in modelo.RepositorioCitasTest
