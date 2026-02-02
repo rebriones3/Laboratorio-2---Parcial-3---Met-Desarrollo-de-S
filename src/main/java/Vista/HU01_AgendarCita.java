@@ -28,12 +28,16 @@ public class HU01_AgendarCita extends JFrame {
     private String horaSeleccionada = null;
     private ButtonGroup grupoHorarios;
     
-    // ✅ NUEVO: Controlador para manejar la lógica
     private CitaController controller;
     
-    /**
-     * Launch the application.
-     */
+    // Horarios disponibles estándar
+    private static final LocalTime[] HORARIOS_DISPONIBLES = {
+        LocalTime.of(8, 0), LocalTime.of(8, 30), LocalTime.of(9, 0), LocalTime.of(9, 30),
+        LocalTime.of(10, 0), LocalTime.of(10, 30), LocalTime.of(11, 0), LocalTime.of(11, 30),
+        LocalTime.of(14, 0), LocalTime.of(14, 30), LocalTime.of(15, 0), LocalTime.of(15, 30),
+        LocalTime.of(16, 0), LocalTime.of(16, 30), LocalTime.of(17, 0), LocalTime.of(17, 30)
+    };
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -47,15 +51,11 @@ public class HU01_AgendarCita extends JFrame {
         });
     }
     
-    /**
-     * Create the frame.
-     */
     public HU01_AgendarCita() {
         setTitle("Sistema de Gestión de Citas - Agendar Nueva Cita");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 900, 700);
         
-        // ✅ NUEVO: Inicializar controlador
         controller = new CitaController();
         
         contentPane = new JPanel();
@@ -68,17 +68,14 @@ public class HU01_AgendarCita extends JFrame {
     }
     
     private void initComponents() {
-        // Header
         JPanel headerPanel = createHeaderPanel();
         contentPane.add(headerPanel, BorderLayout.NORTH);
         
-        // Panel central con scroll
         JPanel centerPanel = createCenterPanel();
         JScrollPane scrollPane = new JScrollPane(centerPanel);
         scrollPane.setBorder(null);
         contentPane.add(scrollPane, BorderLayout.CENTER);
         
-        // Panel de botones
         JPanel buttonPanel = createButtonPanel();
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -110,11 +107,9 @@ public class HU01_AgendarCita extends JFrame {
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         
-        // Información importante
         panel.add(createInfoBox());
         panel.add(Box.createVerticalStrut(20));
         
-        // Tipo de servicio
         panel.add(createFieldPanel("Tipo de Servicio *", 
             cmbServicio = new JComboBox<>(new String[]{
                 "-- Seleccione un servicio --",
@@ -125,20 +120,19 @@ public class HU01_AgendarCita extends JFrame {
             })));
         panel.add(Box.createVerticalStrut(15));
         
-        // Personal de atención
         panel.add(createFieldPanel("Personal de Atención *",
             cmbPersonal = new JComboBox<>(new String[]{
                 "-- Seleccione el profesional --",
-                "Dr. Juan Pérez - Medicina General",
-                "Dra. María González - Pediatría",
-                "Dr. Carlos Ramírez - Cardiología",
-                "Dra. Ana Martínez - Dermatología"
+                "Dr. Juan Pérez",
+                "Dra. María González",
+                "Dr. Carlos Ramírez",
+                "Dra. Ana Martínez"
             })));
         panel.add(Box.createVerticalStrut(15));
         
-        // Fecha
         txtFecha = new JTextField();
         txtFecha.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtFecha.setEditable(false);
         JButton btnCalendario = new JButton("📅 Calendario");
         btnCalendario.addActionListener(e -> seleccionarFecha());
         
@@ -150,7 +144,6 @@ public class HU01_AgendarCita extends JFrame {
         panel.add(createFieldPanel("Fecha de la Cita *", fechaPanel));
         panel.add(Box.createVerticalStrut(15));
         
-        // Horarios disponibles
         JLabel lblHorarios = new JLabel("Horario Disponible *");
         lblHorarios.setFont(new Font("Segoe UI", Font.BOLD, 14));
         panel.add(lblHorarios);
@@ -163,7 +156,6 @@ public class HU01_AgendarCita extends JFrame {
         panel.add(pnlHorarios);
         panel.add(Box.createVerticalStrut(15));
         
-        // Motivo
         JLabel lblMotivo = new JLabel("Motivo de la Consulta (Opcional)");
         lblMotivo.setFont(new Font("Segoe UI", Font.BOLD, 14));
         panel.add(lblMotivo);
@@ -179,17 +171,15 @@ public class HU01_AgendarCita extends JFrame {
         panel.add(scrollMotivo);
         panel.add(Box.createVerticalStrut(20));
         
-        // Resumen
         panel.add(createResumenPanel());
         
-        // Agregar listeners
         cmbServicio.addActionListener(e -> {
             actualizarResumen();
-            actualizarHorarios(); // ✅ NUEVO: Actualizar horarios según personal
+            actualizarHorarios();
         });
         cmbPersonal.addActionListener(e -> {
             actualizarResumen();
-            actualizarHorarios(); // ✅ NUEVO: Actualizar horarios según personal
+            actualizarHorarios();
         });
         
         return panel;
@@ -199,154 +189,102 @@ public class HU01_AgendarCita extends JFrame {
         JPanel panel = new JPanel(new BorderLayout(10, 0));
         panel.setBackground(new Color(227, 242, 253));
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(33, 150, 243), 0, true),
+            BorderFactory.createLineBorder(new Color(100, 181, 246), 2),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
         
         JLabel icono = new JLabel("ℹ️");
-        icono.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        icono.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         
-        JLabel texto = new JLabel("<html><b>Información importante:</b> Los horarios disponibles se actualizan en tiempo real. Selecciona una fecha para ver los horarios disponibles ese día.</html>");
-        texto.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        texto.setForeground(new Color(21, 101, 192));
+        JLabel mensaje = new JLabel("<html><b>Importante:</b> Las citas pueden ser canceladas con al menos 2 horas de anticipación.</html>");
+        mensaje.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         
         panel.add(icono, BorderLayout.WEST);
-        panel.add(texto, BorderLayout.CENTER);
+        panel.add(mensaje, BorderLayout.CENTER);
         
         return panel;
     }
     
-    private JPanel createFieldPanel(String label, JComponent component) {
+    private JPanel createFieldPanel(String labelText, Component field) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        JLabel lblLabel = new JLabel(label);
-        lblLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        component.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        component.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
-        if (component instanceof JComboBox) {
-            ((JComboBox<?>) component).setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        if (field instanceof JComponent) {
+            ((JComponent)field).setAlignmentX(Component.LEFT_ALIGNMENT);
+            ((JComponent)field).setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         }
         
-        panel.add(lblLabel);
+        panel.add(label);
         panel.add(Box.createVerticalStrut(5));
-        panel.add(component);
+        panel.add(field);
         
         return panel;
     }
     
     private JPanel createLeyenda() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         panel.setBackground(Color.WHITE);
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         
-        JLabel disponible = new JLabel("🟢 Disponible");
-        disponible.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        
-        JLabel ocupado = new JLabel("🔴 Ocupado");
-        ocupado.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        
-        panel.add(disponible);
-        panel.add(ocupado);
+        panel.add(createLeyendaItem("🟢 Disponible", new Color(76, 175, 80)));
+        panel.add(createLeyendaItem("🔴 Ocupado", new Color(244, 67, 54)));
         
         return panel;
+    }
+    
+    private JLabel createLeyendaItem(String texto, Color color) {
+        JLabel label = new JLabel(texto);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        label.setForeground(color);
+        return label;
     }
     
     private JPanel createHorariosPanel() {
-        JPanel panel = new JPanel(new GridLayout(0, 4, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(4, 4, 10, 10));
         panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        
-        String[] horarios = {
-            "08:00", "08:30", "09:00", "09:30",
-            "10:00", "10:30", "11:00", "11:30",
-            "14:00", "14:30", "15:00", "15:30",
-            "16:00", "16:30", "17:00", "17:30"
-        };
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 250));
+        panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(224, 224, 224)),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
         
         grupoHorarios = new ButtonGroup();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         
-        for (String horario : horarios) {
-            JToggleButton btn = createBotonHorario(horario);
-            grupoHorarios.add(btn);
-            panel.add(btn);
+        for (LocalTime hora : HORARIOS_DISPONIBLES) {
+            JToggleButton btnHora = new JToggleButton(hora.format(formatter));
+            btnHora.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            btnHora.setBackground(new Color(232, 245, 233));
+            btnHora.setForeground(new Color(46, 125, 50));
+            btnHora.setBorder(BorderFactory.createLineBorder(new Color(76, 175, 80), 2));
+            btnHora.setFocusPainted(false);
+            
+            btnHora.addActionListener(e -> {
+                horaSeleccionada = btnHora.getText();
+                actualizarResumen();
+                validarFormulario();
+            });
+            
+            grupoHorarios.add(btnHora);
+            panel.add(btnHora);
         }
         
         return panel;
-    }
-    
-    // ✅ MODIFICADO: Ahora verifica disponibilidad con el controlador
-    private JToggleButton createBotonHorario(String horario) {
-        JToggleButton btn = new JToggleButton(horario);
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        
-        // Por defecto, todos disponibles (se actualizarán después)
-        btn.setBackground(new Color(232, 245, 233));
-        btn.setForeground(new Color(46, 125, 50));
-        btn.setBorder(BorderFactory.createLineBorder(new Color(76, 175, 80), 2));
-        btn.setFocusPainted(false);
-        
-        btn.addActionListener(e -> {
-            if (btn.isSelected()) {
-                horaSeleccionada = horario;
-                actualizarResumen();
-                validarFormulario();
-            }
-        });
-        
-        return btn;
-    }
-    
-    // ✅ NUEVO: Método para actualizar horarios según disponibilidad real
-    private void actualizarHorarios() {
-        if (cmbPersonal.getSelectedIndex() == 0 || txtFecha.getText().trim().isEmpty()) {
-            return;
-        }
-        
-        try {
-            String personal = cmbPersonal.getSelectedItem().toString();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate fecha = LocalDate.parse(txtFecha.getText(), formatter);
-            
-            // ✅ Obtener horarios ocupados del controlador
-            List<LocalTime> horariosOcupados = controller.obtenerHorariosOcupados(personal, fecha);
-            
-            // Actualizar botones
-            Component[] components = pnlHorarios.getComponents();
-            for (Component comp : components) {
-                if (comp instanceof JToggleButton) {
-                    JToggleButton btn = (JToggleButton) comp;
-                    String horarioTexto = btn.getText();
-                    LocalTime hora = LocalTime.parse(horarioTexto);
-                    
-                    boolean ocupado = horariosOcupados.contains(hora);
-                    
-                    if (ocupado) {
-                        btn.setBackground(new Color(255, 235, 238));
-                        btn.setForeground(new Color(198, 40, 40));
-                        btn.setBorder(BorderFactory.createLineBorder(new Color(239, 83, 80), 2));
-                        btn.setEnabled(false);
-                    } else {
-                        btn.setBackground(new Color(232, 245, 233));
-                        btn.setForeground(new Color(46, 125, 50));
-                        btn.setBorder(BorderFactory.createLineBorder(new Color(76, 175, 80), 2));
-                        btn.setEnabled(true);
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            // Si hay error en el formato de fecha, ignorar
-        }
     }
     
     private JPanel createResumenPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(new Color(245, 245, 245));
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(224, 224, 224)),
             BorderFactory.createEmptyBorder(20, 20, 20, 20)
@@ -421,8 +359,55 @@ public class HU01_AgendarCita extends JFrame {
         LocalDate hoy = LocalDate.now();
         txtFecha.setText(hoy.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         actualizarResumen();
-        actualizarHorarios(); // ✅ NUEVO: Actualizar horarios al cambiar fecha
+        actualizarHorarios();
         validarFormulario();
+    }
+    
+    /**
+     * ✅ MÉTODO NUEVO: Actualiza los horarios disponibles según personal y fecha
+     */
+    private void actualizarHorarios() {
+        // Verificar que tengamos personal y fecha seleccionados
+        if (cmbPersonal.getSelectedIndex() <= 0 || txtFecha.getText().trim().isEmpty()) {
+            return;
+        }
+        
+        try {
+            String personal = cmbPersonal.getSelectedItem().toString();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate fecha = LocalDate.parse(txtFecha.getText(), formatter);
+            
+            // Obtener horarios ocupados del controlador
+            List<LocalTime> horariosOcupados = controller.obtenerHorariosOcupados(personal, fecha);
+            
+            // Actualizar botones de horarios
+            Component[] components = pnlHorarios.getComponents();
+            for (Component comp : components) {
+                if (comp instanceof JToggleButton) {
+                    JToggleButton btn = (JToggleButton) comp;
+                    LocalTime horaBoton = LocalTime.parse(btn.getText());
+                    
+                    boolean ocupado = horariosOcupados.contains(horaBoton);
+                    
+                    if (ocupado) {
+                        // Marcar como ocupado
+                        btn.setEnabled(false);
+                        btn.setBackground(new Color(255, 235, 238));
+                        btn.setForeground(new Color(198, 40, 40));
+                        btn.setBorder(BorderFactory.createLineBorder(new Color(244, 67, 54), 2));
+                    } else {
+                        // Marcar como disponible
+                        btn.setEnabled(true);
+                        btn.setBackground(new Color(232, 245, 233));
+                        btn.setForeground(new Color(46, 125, 50));
+                        btn.setBorder(BorderFactory.createLineBorder(new Color(76, 175, 80), 2));
+                    }
+                }
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Error al actualizar horarios: " + e.getMessage());
+        }
     }
     
     private void actualizarResumen() {
@@ -460,14 +445,12 @@ public class HU01_AgendarCita extends JFrame {
         btnConfirmar.setEnabled(valido);
     }
     
-    // ✅ MODIFICADO: Ahora usa el controlador para agendar
     private void confirmarCita() {
         btnConfirmar.setEnabled(false);
         btnConfirmar.setText("Procesando...");
         
         Timer timer = new Timer(1500, e -> {
             try {
-                // Obtener datos del formulario
                 String servicio = cmbServicio.getSelectedItem().toString();
                 String personal = cmbPersonal.getSelectedItem().toString();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -475,7 +458,6 @@ public class HU01_AgendarCita extends JFrame {
                 LocalTime hora = LocalTime.parse(horaSeleccionada);
                 String motivo = txtMotivo.getText().trim();
                 
-                // ✅ Llamar al controlador para agendar
                 CitaController.ResultadoOperacion resultado = 
                     controller.agendarCita(servicio, personal, fecha, hora, motivo);
                 
@@ -535,7 +517,6 @@ public class HU01_AgendarCita extends JFrame {
         btnConfirmar.setEnabled(false);
         btnConfirmar.setText("Confirmar Cita");
         
-        // Resetear botones de horario
         Component[] components = pnlHorarios.getComponents();
         for (Component comp : components) {
             if (comp instanceof JToggleButton) {

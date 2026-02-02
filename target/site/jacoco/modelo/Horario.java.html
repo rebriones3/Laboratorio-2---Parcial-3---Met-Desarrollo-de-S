@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Horario.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p3lab2brionesestefany</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">Horario.java</span></div><h1>Horario.java</h1><pre class="source lang-java linenums">package modelo;
+
+import java.time.LocalTime;
+
+/**
+ * Clase que representa un horario disponible para citas
+ * Historia de Usuario: HU-02 Consultar disponibilidad en tiempo real
+ */
+public class Horario {
+    
+    private LocalTime hora;
+    private boolean disponible;
+    private String personal;
+    
+<span class="nc" id="L15">    public Horario(LocalTime hora, boolean disponible) {</span>
+<span class="nc" id="L16">        this.hora = hora;</span>
+<span class="nc" id="L17">        this.disponible = disponible;</span>
+<span class="nc" id="L18">    }</span>
+    
+<span class="nc" id="L20">    public Horario(LocalTime hora, boolean disponible, String personal) {</span>
+<span class="nc" id="L21">        this.hora = hora;</span>
+<span class="nc" id="L22">        this.disponible = disponible;</span>
+<span class="nc" id="L23">        this.personal = personal;</span>
+<span class="nc" id="L24">    }</span>
+    
+    /**
+     * Marca el horario como ocupado
+     */
+    public void ocupar() {
+<span class="nc" id="L30">        this.disponible = false;</span>
+<span class="nc" id="L31">    }</span>
+    
+    /**
+     * Libera el horario
+     */
+    public void liberar() {
+<span class="nc" id="L37">        this.disponible = true;</span>
+<span class="nc" id="L38">    }</span>
+    
+    /**
+     * Obtiene el horario en formato String HH:mm
+     */
+    public String getHoraFormateada() {
+<span class="nc" id="L44">        return String.format(&quot;%02d:%02d&quot;, hora.getHour(), hora.getMinute());</span>
+    }
+    
+    // Getters y Setters
+    public LocalTime getHora() {
+<span class="nc" id="L49">        return hora;</span>
+    }
+    
+    public void setHora(LocalTime hora) {
+<span class="nc" id="L53">        this.hora = hora;</span>
+<span class="nc" id="L54">    }</span>
+    
+    public boolean isDisponible() {
+<span class="nc" id="L57">        return disponible;</span>
+    }
+    
+    public void setDisponible(boolean disponible) {
+<span class="nc" id="L61">        this.disponible = disponible;</span>
+<span class="nc" id="L62">    }</span>
+    
+    public String getPersonal() {
+<span class="nc" id="L65">        return personal;</span>
+    }
+    
+    public void setPersonal(String personal) {
+<span class="nc" id="L69">        this.personal = personal;</span>
+<span class="nc" id="L70">    }</span>
+    
+    @Override
+    public String toString() {
+<span class="nc" id="L74">        return &quot;Horario{&quot; +</span>
+<span class="nc" id="L75">                &quot;hora=&quot; + getHoraFormateada() +</span>
+                &quot;, disponible=&quot; + disponible +
+                &quot;, personal='&quot; + personal + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

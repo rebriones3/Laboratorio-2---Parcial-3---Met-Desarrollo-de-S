@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="modelo.ValidadorCitasTest" time="0.038" tests="23" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="modelo.ValidadorCitasTest" time="0.024" tests="23" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="user.country" value="ES"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire9944279278491841498\surefirebooter-20260201234110781_3.jar C:\Users\PERSONAL\AppData\Local\Temp\surefire9944279278491841498 2026-02-01T23-41-10_668-jvmRun1 surefire-20260201234110781_1tmp surefire_0-20260201234110781_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire5864386778192221649\surefirebooter-20260202022646156_3.jar C:\Users\PERSONAL\AppData\Local\Temp\surefire5864386778192221649 2026-02-02T02-26-46_055-jvmRun1 surefire-20260202022646156_1tmp surefire_0-20260202022646156_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\test-classes;C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\classes;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.1\junit-jupiter-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.1\junit-jupiter-params-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire9944279278491841498\surefirebooter-20260201234110781_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire5864386778192221649\surefirebooter-20260202022646156_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.8+12-LTS-250"/>
@@ -59,27 +59,27 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="validarPoliticaCancelacion_debe_retornar_true_con_mas_de_2_horas" classname="modelo.ValidadorCitasTest" time="0.003"/>
+  <testcase name="validarPoliticaCancelacion_debe_retornar_true_con_mas_de_2_horas" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarHorarioNoEnPasado_debe_retornar_false_con_horario_pasado" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarFechaNoEnPasado_debe_retornar_true_con_fecha_hoy" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="validarCamposObligatorios_debe_retornar_false_con_hora_nula" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="validarCitaCompleta_debe_retornar_NINGUNO_con_datos_validos" classname="modelo.ValidadorCitasTest" time="0"/>
-  <testcase name="validarCamposObligatorios_debe_retornar_false_con_personal_nulo" classname="modelo.ValidadorCitasTest" time="0.002"/>
-  <testcase name="validarPoliticaCancelacion_debe_retornar_false_con_menos_de_2_horas" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="validarCamposObligatorios_debe_retornar_false_con_servicio_vacio" classname="modelo.ValidadorCitasTest" time="0.002"/>
-  <testcase name="validarNoSolapamiento_debe_retornar_true_sin_conflictos" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="validarCamposObligatorios_debe_retornar_false_con_hora_nula" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="validarCitaCompleta_debe_retornar_NINGUNO_con_datos_validos" classname="modelo.ValidadorCitasTest" time="0.001"/>
+  <testcase name="validarCamposObligatorios_debe_retornar_false_con_personal_nulo" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="validarPoliticaCancelacion_debe_retornar_false_con_menos_de_2_horas" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="validarCamposObligatorios_debe_retornar_false_con_servicio_vacio" classname="modelo.ValidadorCitasTest" time="0.001"/>
+  <testcase name="validarNoSolapamiento_debe_retornar_true_sin_conflictos" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarCitaCompleta_debe_retornar_HORARIO_OCUPADO" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="obtenerMensajeError_debe_retornar_mensaje_correcto" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="validarCamposObligatorios_debe_retornar_false_con_fecha_nula" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="validarNoSolapamiento_debe_retornar_true_con_personal_diferente" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="obtenerMensajeError_debe_retornar_mensaje_correcto" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="validarCamposObligatorios_debe_retornar_false_con_fecha_nula" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="validarNoSolapamiento_debe_retornar_true_con_personal_diferente" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarCitaCompleta_debe_retornar_FECHA_PASADA" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarNoSolapamiento_debe_retornar_false_con_horario_ocupado" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarHorarioNoEnPasado_debe_retornar_true_con_horario_futuro" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="validarCamposObligatorios_debe_retornar_false_con_servicio_nulo" classname="modelo.ValidadorCitasTest" time="0.001"/>
-  <testcase name="validarFechaNoEnPasado_debe_retornar_false_con_fecha_nula" classname="modelo.ValidadorCitasTest" time="0.001"/>
+  <testcase name="validarCamposObligatorios_debe_retornar_false_con_servicio_nulo" classname="modelo.ValidadorCitasTest" time="0"/>
+  <testcase name="validarFechaNoEnPasado_debe_retornar_false_con_fecha_nula" classname="modelo.ValidadorCitasTest" time="0"/>
   <testcase name="validarCamposObligatorios_debe_retornar_true_con_campos_completos" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarNoSolapamiento_debe_retornar_true_con_cita_cancelada" classname="modelo.ValidadorCitasTest" time="0.001"/>
   <testcase name="validarFechaNoEnPasado_debe_retornar_false_con_fecha_pasada" classname="modelo.ValidadorCitasTest" time="0"/>
-  <testcase name="validarCitaCompleta_debe_retornar_CAMPOS_INCOMPLETOS" classname="modelo.ValidadorCitasTest" time="0.001"/>
+  <testcase name="validarCitaCompleta_debe_retornar_CAMPOS_INCOMPLETOS" classname="modelo.ValidadorCitasTest" time="0"/>
   <testcase name="validarFechaNoEnPasado_debe_retornar_true_con_fecha_futura" classname="modelo.ValidadorCitasTest" time="0.001"/>
 </testsuite>

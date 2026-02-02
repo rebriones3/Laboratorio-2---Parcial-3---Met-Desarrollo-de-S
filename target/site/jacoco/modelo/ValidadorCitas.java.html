@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ValidadorCitas.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p3lab2brionesestefany</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">ValidadorCitas.java</span></div><h1>ValidadorCitas.java</h1><pre class="source lang-java linenums">package modelo;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ * Clase que contiene las reglas de negocio para validación de citas
+ * Implementa los criterios de aceptación de las historias de usuario
+ */
+<span class="nc" id="L12">public class ValidadorCitas {</span>
+    
+    /**
+     * Valida que todos los campos obligatorios estén completos
+     * Criterio HU-01: Validación de campos obligatorios
+     */
+    public static boolean validarCamposObligatorios(String servicio, String personal, 
+                                                     LocalDate fecha, LocalTime hora) {
+<span class="fc bfc" id="L20" title="All 6 branches covered.">        return servicio != null &amp;&amp; !servicio.trim().isEmpty() &amp;&amp;</span>
+<span class="pc bpc" id="L21" title="1 of 6 branches missed.">               personal != null &amp;&amp; !personal.trim().isEmpty() &amp;&amp;</span>
+               fecha != null &amp;&amp;
+               hora != null;
+    }
+    
+    /**
+     * Valida que la fecha no sea pasada
+     * Criterio HU-01: No permite seleccionar horarios pasados
+     */
+    public static boolean validarFechaNoEnPasado(LocalDate fecha) {
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (fecha == null) {</span>
+<span class="fc" id="L32">            return false;</span>
+        }
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        return !fecha.isBefore(LocalDate.now());</span>
+    }
+    
+    /**
+     * Valida que el horario no esté en el pasado
+     * Criterio HU-01: No permite seleccionar horarios pasados
+     */
+    public static boolean validarHorarioNoEnPasado(LocalDate fecha, LocalTime hora) {
+<span class="pc bpc" id="L42" title="2 of 4 branches missed.">        if (fecha == null || hora == null) {</span>
+<span class="nc" id="L43">            return false;</span>
+        }
+        
+<span class="fc" id="L46">        LocalDateTime fechaHoraCita = LocalDateTime.of(fecha, hora);</span>
+<span class="fc" id="L47">        LocalDateTime ahora = LocalDateTime.now();</span>
+        
+<span class="fc" id="L49">        return fechaHoraCita.isAfter(ahora);</span>
+    }
+    
+    /**
+     * Valida que no haya solapamiento de horarios
+     * Criterio HU-11: Evitar solapamiento de citas
+     */
+    public static boolean validarNoSolapamiento(String personal, LocalDate fecha, 
+                                                LocalTime hora, List&lt;Cita&gt; citasExistentes) {
+<span class="pc bpc" id="L58" title="1 of 4 branches missed.">        if (citasExistentes == null || citasExistentes.isEmpty()) {</span>
+<span class="fc" id="L59">            return true;</span>
+        }
+        
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (Cita cita : citasExistentes) {</span>
+            // Solo verificar citas pendientes del mismo personal
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (cita.getEstado() == Cita.EstadoCita.PENDIENTE &amp;&amp;</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">                cita.getPersonal().equals(personal) &amp;&amp;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">                cita.getFecha().equals(fecha) &amp;&amp;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">                cita.getHora().equals(hora)) {</span>
+<span class="fc" id="L68">                return false; // Hay solapamiento</span>
+            }
+<span class="fc" id="L70">        }</span>
+        
+<span class="fc" id="L72">        return true; // No hay solapamiento</span>
+    }
+    
+    /**
+     * Valida que se pueda cancelar una cita
+     * Criterio HU-04: Permite cancelar con al menos 2 horas de anticipación
+     */
+    public static boolean validarPuedeCancelar(Cita cita) {
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (cita == null) {</span>
+<span class="nc" id="L81">            return false;</span>
+        }
+        
+<span class="nc" id="L84">        return cita.puedeCancelar();</span>
+    }
+    
+    /**
+     * Valida que la política de cancelación se cumpla
+     * Criterio HU-04: Al menos 2 horas de anticipación
+     */
+    public static boolean validarPoliticaCancelacion(LocalDateTime fechaHoraCita) {
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (fechaHoraCita == null) {</span>
+<span class="nc" id="L93">            return false;</span>
+        }
+        
+<span class="fc" id="L96">        LocalDateTime ahora = LocalDateTime.now();</span>
+<span class="fc" id="L97">        LocalDateTime limiteCancelacion = fechaHoraCita.minusHours(2);</span>
+        
+<span class="fc" id="L99">        return ahora.isBefore(limiteCancelacion);</span>
+    }
+    
+    /**
+     * Obtiene mensaje de error según la validación
+     */
+    public static String obtenerMensajeError(TipoError tipoError) {
+<span class="pc bpc" id="L106" title="4 of 7 branches missed.">        switch (tipoError) {</span>
+            case CAMPOS_INCOMPLETOS:
+<span class="fc" id="L108">                return &quot;Por favor complete todos los campos obligatorios.&quot;;</span>
+            case FECHA_PASADA:
+<span class="fc" id="L110">                return &quot;No puede agendar citas en fechas pasadas.&quot;;</span>
+            case HORARIO_PASADO:
+<span class="nc" id="L112">                return &quot;No puede agendar citas en horarios pasados.&quot;;</span>
+            case HORARIO_OCUPADO:
+<span class="fc" id="L114">                return &quot;El horario seleccionado ya está ocupado. Por favor seleccione otro.&quot;;</span>
+            case NO_PUEDE_CANCELAR:
+<span class="nc" id="L116">                return &quot;No puede cancelar la cita. Debe hacerlo con al menos 2 horas de anticipación.&quot;;</span>
+            case CITA_YA_ATENDIDA:
+<span class="nc" id="L118">                return &quot;No puede cancelar una cita que ya fue atendida.&quot;;</span>
+            default:
+<span class="nc" id="L120">                return &quot;Error desconocido en la validación.&quot;;</span>
+        }
+    }
+    
+    /**
+     * Enum de tipos de errores de validación
+     */
+<span class="fc" id="L127">    public enum TipoError {</span>
+<span class="fc" id="L128">        CAMPOS_INCOMPLETOS,</span>
+<span class="fc" id="L129">        FECHA_PASADA,</span>
+<span class="fc" id="L130">        HORARIO_PASADO,</span>
+<span class="fc" id="L131">        HORARIO_OCUPADO,</span>
+<span class="fc" id="L132">        NO_PUEDE_CANCELAR,</span>
+<span class="fc" id="L133">        CITA_YA_ATENDIDA,</span>
+<span class="fc" id="L134">        NINGUNO</span>
+    }
+    
+    /**
+     * Realiza validación completa de una cita nueva
+     * Retorna el tipo de error encontrado o NINGUNO si es válida
+     */
+    public static TipoError validarCitaCompleta(String servicio, String personal,
+                                                LocalDate fecha, LocalTime hora,
+                                                List&lt;Cita&gt; citasExistentes) {
+        // 1. Validar campos obligatorios
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (!validarCamposObligatorios(servicio, personal, fecha, hora)) {</span>
+<span class="fc" id="L146">            return TipoError.CAMPOS_INCOMPLETOS;</span>
+        }
+        
+        // 2. Validar fecha no en pasado
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (!validarFechaNoEnPasado(fecha)) {</span>
+<span class="fc" id="L151">            return TipoError.FECHA_PASADA;</span>
+        }
+        
+        // 3. Validar horario no en pasado
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (!validarHorarioNoEnPasado(fecha, hora)) {</span>
+<span class="nc" id="L156">            return TipoError.HORARIO_PASADO;</span>
+        }
+        
+        // 4. Validar no solapamiento
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (!validarNoSolapamiento(personal, fecha, hora, citasExistentes)) {</span>
+<span class="fc" id="L161">            return TipoError.HORARIO_OCUPADO;</span>
+        }
+        
+<span class="fc" id="L164">        return TipoError.NINGUNO;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

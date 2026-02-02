@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CitaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p3lab2brionesestefany</a> &gt; <a href="index.source.html" class="el_package">controlador</a> &gt; <span class="el_source">CitaController.java</span></div><h1>CitaController.java</h1><pre class="source lang-java linenums">package controlador;
+
+import modelo.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+/**
+ * Controlador principal para la gestión de citas
+ * Coordina las operaciones entre la vista y el modelo
+ */
+public class CitaController {
+    
+    private RepositorioCitas repositorio;
+    
+<span class="fc" id="L17">    public CitaController() {</span>
+<span class="fc" id="L18">        this.repositorio = RepositorioCitas.obtenerInstancia();</span>
+<span class="fc" id="L19">    }</span>
+    
+    /**
+     * Agenda una nueva cita
+     * HU-01: Agendar cita en línea
+     * 
+     * @return ResultadoOperacion con el código de la cita si fue exitoso
+     */
+    public ResultadoOperacion agendarCita(String servicio, String personal, 
+                                         LocalDate fecha, LocalTime hora, 
+                                         String motivo) {
+        
+        // 1. Validar campos obligatorios
+<span class="fc" id="L32">        ValidadorCitas.TipoError error = ValidadorCitas.validarCitaCompleta(</span>
+<span class="fc" id="L33">            servicio, personal, fecha, hora, repositorio.obtenerTodas()</span>
+        );
+        
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (error != ValidadorCitas.TipoError.NINGUNO) {</span>
+<span class="fc" id="L37">            return new ResultadoOperacion(</span>
+                false, 
+                null, 
+<span class="fc" id="L40">                ValidadorCitas.obtenerMensajeError(error)</span>
+            );
+        }
+        
+        // 2. Crear la cita
+<span class="fc" id="L45">        Cita nuevaCita = new Cita(servicio, personal, fecha, hora, motivo);</span>
+        
+        // 3. Guardar en el repositorio
+<span class="fc" id="L48">        boolean guardado = repositorio.guardar(nuevaCita);</span>
+        
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (guardado) {</span>
+<span class="fc" id="L51">            return new ResultadoOperacion(</span>
+                true,
+<span class="fc" id="L53">                nuevaCita.getCodigo(),</span>
+<span class="fc" id="L54">                &quot;Cita agendada exitosamente. Código: &quot; + nuevaCita.getCodigo()</span>
+            );
+        } else {
+<span class="nc" id="L57">            return new ResultadoOperacion(</span>
+                false,
+                null,
+                &quot;Error al guardar la cita. El horario podría estar ocupado.&quot;
+            );
+        }
+    }
+    
+    /**
+     * Obtiene los horarios ocupados para un personal en una fecha
+     * HU-02: Consultar disponibilidad en tiempo real
+     */
+    public List&lt;LocalTime&gt; obtenerHorariosOcupados(String personal, LocalDate fecha) {
+<span class="fc" id="L70">        return repositorio.obtenerHorariosOcupados(personal, fecha);</span>
+    }
+    
+    /**
+     * Verifica si un horario específico está disponible
+     * HU-02: Consultar disponibilidad en tiempo real
+     */
+    public boolean verificarDisponibilidad(String personal, LocalDate fecha, LocalTime hora) {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        return !repositorio.estaOcupado(personal, fecha, hora);</span>
+    }
+    
+    /**
+     * Cancela una cita por código
+     * HU-04: Cancelar cita
+     */
+    public ResultadoOperacion cancelarCita(String codigo) {
+        // 1. Buscar la cita
+<span class="fc" id="L87">        Cita cita = repositorio.buscarPorCodigo(codigo);</span>
+        
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (cita == null) {</span>
+<span class="fc" id="L90">            return new ResultadoOperacion(</span>
+                false,
+                null,
+                &quot;No se encontró la cita con el código: &quot; + codigo
+            );
+        }
+        
+        // 2. Validar si puede cancelarse
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (!cita.puedeCancelar()) {</span>
+<span class="nc" id="L99">            return new ResultadoOperacion(</span>
+                false,
+                null,
+                &quot;No puede cancelar la cita. Debe hacerlo con al menos 2 horas de anticipación.&quot;
+            );
+        }
+        
+        // 3. Cancelar
+<span class="fc" id="L107">        boolean cancelado = cita.cancelar();</span>
+        
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        if (cancelado) {</span>
+<span class="fc" id="L110">            return new ResultadoOperacion(</span>
+                true,
+                codigo,
+                &quot;Cita cancelada exitosamente.&quot;
+            );
+        } else {
+<span class="nc" id="L116">            return new ResultadoOperacion(</span>
+                false,
+                null,
+                &quot;Error al cancelar la cita.&quot;
+            );
+        }
+    }
+    
+    /**
+     * Obtiene todas las citas cancelables del sistema
+     * HU-04: Cancelar cita
+     */
+    public List&lt;Cita&gt; obtenerCitasCancelables() {
+<span class="nc" id="L129">        return repositorio.obtenerCancelables();</span>
+    }
+    
+    /**
+     * Obtiene todas las citas pendientes
+     */
+    public List&lt;Cita&gt; obtenerCitasPendientes() {
+<span class="fc" id="L136">        return repositorio.obtenerPendientes();</span>
+    }
+    
+    /**
+     * Obtiene todas las citas
+     */
+    public List&lt;Cita&gt; obtenerTodasLasCitas() {
+<span class="fc" id="L143">        return repositorio.obtenerTodas();</span>
+    }
+    
+    /**
+     * Busca una cita por código
+     */
+    public Cita buscarCitaPorCodigo(String codigo) {
+<span class="fc" id="L150">        return repositorio.buscarPorCodigo(codigo);</span>
+    }
+    
+    /**
+     * Obtiene estadísticas de citas
+     */
+    public EstadisticasCitas obtenerEstadisticas() {
+<span class="fc" id="L157">        long pendientes = repositorio.contarPorEstado(Cita.EstadoCita.PENDIENTE);</span>
+<span class="fc" id="L158">        long atendidas = repositorio.contarPorEstado(Cita.EstadoCita.ATENDIDA);</span>
+<span class="fc" id="L159">        long canceladas = repositorio.contarPorEstado(Cita.EstadoCita.CANCELADA);</span>
+<span class="fc" id="L160">        long noAsistio = repositorio.contarPorEstado(Cita.EstadoCita.NO_ASISTIO);</span>
+        
+<span class="fc" id="L162">        return new EstadisticasCitas(pendientes, atendidas, canceladas, noAsistio);</span>
+    }
+    
+    /**
+     * Clase interna para el resultado de operaciones
+     */
+    public static class ResultadoOperacion {
+        private boolean exitoso;
+        private String codigo;
+        private String mensaje;
+        
+<span class="fc" id="L173">        public ResultadoOperacion(boolean exitoso, String codigo, String mensaje) {</span>
+<span class="fc" id="L174">            this.exitoso = exitoso;</span>
+<span class="fc" id="L175">            this.codigo = codigo;</span>
+<span class="fc" id="L176">            this.mensaje = mensaje;</span>
+<span class="fc" id="L177">        }</span>
+        
+        public boolean isExitoso() {
+<span class="fc" id="L180">            return exitoso;</span>
+        }
+        
+        public String getCodigo() {
+<span class="fc" id="L184">            return codigo;</span>
+        }
+        
+        public String getMensaje() {
+<span class="fc" id="L188">            return mensaje;</span>
+        }
+    }
+    
+    /**
+     * Clase interna para estadísticas
+     */
+    public static class EstadisticasCitas {
+        private long pendientes;
+        private long atendidas;
+        private long canceladas;
+        private long noAsistio;
+        
+<span class="fc" id="L201">        public EstadisticasCitas(long pendientes, long atendidas, long canceladas, long noAsistio) {</span>
+<span class="fc" id="L202">            this.pendientes = pendientes;</span>
+<span class="fc" id="L203">            this.atendidas = atendidas;</span>
+<span class="fc" id="L204">            this.canceladas = canceladas;</span>
+<span class="fc" id="L205">            this.noAsistio = noAsistio;</span>
+<span class="fc" id="L206">        }</span>
+        
+        public long getPendientes() {
+<span class="fc" id="L209">            return pendientes;</span>
+        }
+        
+        public long getAtendidas() {
+<span class="nc" id="L213">            return atendidas;</span>
+        }
+        
+        public long getCanceladas() {
+<span class="nc" id="L217">            return canceladas;</span>
+        }
+        
+        public long getNoAsistio() {
+<span class="nc" id="L221">            return noAsistio;</span>
+        }
+        
+        public long getTotal() {
+<span class="fc" id="L225">            return pendientes + atendidas + canceladas + noAsistio;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RepositorioCitas.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p3lab2brionesestefany</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">RepositorioCitas.java</span></div><h1>RepositorioCitas.java</h1><pre class="source lang-java linenums">package modelo;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Repositorio simulado para gestionar citas en memoria
+ * En un proyecto real, esto se conectaría a una base de datos
+ */
+public class RepositorioCitas {
+    
+    private static RepositorioCitas instancia;
+    private List&lt;Cita&gt; citas;
+    
+    // Singleton pattern
+<span class="fc" id="L19">    private RepositorioCitas() {</span>
+<span class="fc" id="L20">        this.citas = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L21">        inicializarDatosPrueba();</span>
+<span class="fc" id="L22">    }</span>
+    
+    /**
+     * Obtiene la instancia única del repositorio
+     */
+    public static RepositorioCitas obtenerInstancia() {
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (instancia == null) {</span>
+<span class="fc" id="L29">            instancia = new RepositorioCitas();</span>
+        }
+<span class="fc" id="L31">        return instancia;</span>
+    }
+    
+    /**
+     * Inicializa datos de prueba para simular citas existentes
+     */
+    private void inicializarDatosPrueba() {
+        // Simular algunas citas existentes
+<span class="fc" id="L39">        LocalDate hoy = LocalDate.now();</span>
+        
+<span class="fc" id="L41">        Cita cita1 = new Cita(&quot;Consulta General&quot;, &quot;Dr. Juan Pérez&quot;, </span>
+<span class="fc" id="L42">                             hoy, LocalTime.of(8, 0), &quot;Chequeo general&quot;);</span>
+<span class="fc" id="L43">        cita1.setCodigo(&quot;CITA-A1B2C3D4&quot;);</span>
+        
+<span class="fc" id="L45">        Cita cita2 = new Cita(&quot;Consulta Especializada&quot;, &quot;Dra. María González&quot;, </span>
+<span class="fc" id="L46">                             hoy, LocalTime.of(9, 30), &quot;Seguimiento&quot;);</span>
+<span class="fc" id="L47">        cita2.setCodigo(&quot;CITA-E5F6G7H8&quot;);</span>
+        
+<span class="fc" id="L49">        Cita cita3 = new Cita(&quot;Exámenes de Laboratorio&quot;, &quot;Dr. Carlos Ramírez&quot;, </span>
+<span class="fc" id="L50">                             hoy, LocalTime.of(11, 0), &quot;Exámenes de rutina&quot;);</span>
+<span class="fc" id="L51">        cita3.setCodigo(&quot;CITA-I9J0K1L2&quot;);</span>
+        
+        // Agregar citas de prueba
+<span class="fc" id="L54">        citas.add(cita1);</span>
+<span class="fc" id="L55">        citas.add(cita2);</span>
+<span class="fc" id="L56">        citas.add(cita3);</span>
+<span class="fc" id="L57">    }</span>
+    
+    /**
+     * Guarda una nueva cita
+     */
+    public boolean guardar(Cita cita) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (cita == null) {</span>
+<span class="fc" id="L64">            return false;</span>
+        }
+        
+        // Validar que no exista solapamiento antes de guardar
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!ValidadorCitas.validarNoSolapamiento(</span>
+<span class="fc" id="L69">                cita.getPersonal(), </span>
+<span class="fc" id="L70">                cita.getFecha(), </span>
+<span class="fc" id="L71">                cita.getHora(), </span>
+                this.citas)) {
+<span class="fc" id="L73">            return false;</span>
+        }
+        
+<span class="fc" id="L76">        return citas.add(cita);</span>
+    }
+    
+    /**
+     * Busca una cita por código
+     */
+    public Cita buscarPorCodigo(String codigo) {
+<span class="fc" id="L83">        return citas.stream()</span>
+<span class="fc" id="L84">                   .filter(c -&gt; c.getCodigo().equals(codigo))</span>
+<span class="fc" id="L85">                   .findFirst()</span>
+<span class="fc" id="L86">                   .orElse(null);</span>
+    }
+    
+    /**
+     * Obtiene todas las citas
+     */
+    public List&lt;Cita&gt; obtenerTodas() {
+<span class="fc" id="L93">        return new ArrayList&lt;&gt;(citas);</span>
+    }
+    
+    /**
+     * Obtiene citas por personal
+     */
+    public List&lt;Cita&gt; obtenerPorPersonal(String personal) {
+<span class="fc" id="L100">        return citas.stream()</span>
+<span class="fc" id="L101">                   .filter(c -&gt; c.getPersonal().equals(personal))</span>
+<span class="fc" id="L102">                   .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Obtiene citas por fecha
+     */
+    public List&lt;Cita&gt; obtenerPorFecha(LocalDate fecha) {
+<span class="fc" id="L109">        return citas.stream()</span>
+<span class="fc" id="L110">                   .filter(c -&gt; c.getFecha().equals(fecha))</span>
+<span class="fc" id="L111">                   .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Obtiene citas pendientes
+     */
+    public List&lt;Cita&gt; obtenerPendientes() {
+<span class="fc" id="L118">        return citas.stream()</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                   .filter(c -&gt; c.getEstado() == Cita.EstadoCita.PENDIENTE)</span>
+<span class="fc" id="L120">                   .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Obtiene citas cancelables (pendientes con más de 2 horas de anticipación)
+     */
+    public List&lt;Cita&gt; obtenerCancelables() {
+<span class="nc" id="L127">        return citas.stream()</span>
+<span class="nc" id="L128">                   .filter(Cita::puedeCancelar)</span>
+<span class="nc" id="L129">                   .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Cancela una cita por código
+     */
+    public boolean cancelarCita(String codigo) {
+<span class="nc" id="L136">        Cita cita = buscarPorCodigo(codigo);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (cita == null) {</span>
+<span class="nc" id="L138">            return false;</span>
+        }
+        
+<span class="nc" id="L141">        return cita.cancelar();</span>
+    }
+    
+    /**
+     * Verifica si un horario está ocupado
+     */
+    public boolean estaOcupado(String personal, LocalDate fecha, LocalTime hora) {
+<span class="fc" id="L148">        return citas.stream()</span>
+<span class="fc" id="L149">                   .anyMatch(c -&gt; </span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                       c.getEstado() == Cita.EstadoCita.PENDIENTE &amp;&amp;</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">                       c.getPersonal().equals(personal) &amp;&amp;</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">                       c.getFecha().equals(fecha) &amp;&amp;</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">                       c.getHora().equals(hora)</span>
+                   );
+    }
+    
+    /**
+     * Obtiene horarios ocupados para un personal en una fecha
+     */
+    public List&lt;LocalTime&gt; obtenerHorariosOcupados(String personal, LocalDate fecha) {
+<span class="fc" id="L161">        return citas.stream()</span>
+<span class="fc" id="L162">                   .filter(c -&gt; </span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                       c.getEstado() == Cita.EstadoCita.PENDIENTE &amp;&amp;</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">                       c.getPersonal().equals(personal) &amp;&amp;</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                       c.getFecha().equals(fecha)</span>
+                   )
+<span class="fc" id="L167">                   .map(Cita::getHora)</span>
+<span class="fc" id="L168">                   .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Cuenta citas por estado
+     */
+    public long contarPorEstado(Cita.EstadoCita estado) {
+<span class="fc" id="L175">        return citas.stream()</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">                   .filter(c -&gt; c.getEstado() == estado)</span>
+<span class="fc" id="L177">                   .count();</span>
+    }
+    
+    /**
+     * Elimina todas las citas (útil para pruebas)
+     */
+    public void limpiar() {
+<span class="fc" id="L184">        citas.clear();</span>
+<span class="fc" id="L185">    }</span>
+    
+    /**
+     * Obtiene la cantidad total de citas
+     */
+    public int contarTotal() {
+<span class="fc" id="L191">        return citas.size();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
