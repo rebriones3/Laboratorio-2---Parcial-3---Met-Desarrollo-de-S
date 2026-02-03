@@ -9,14 +9,17 @@ import java.util.List;
 /**
  * Controlador principal para la gestión de citas
  * Coordina las operaciones entre la vista y el modelo
+ * MODIFICADO: Ahora usa RepositorioCitasMongo en lugar de RepositorioCitas
  */
 public class CitaController {
     
-    private RepositorioCitas repositorio;
+    private RepositorioCitasMongo repositorio;
     
-<span class="fc" id="L17">    public CitaController() {</span>
-<span class="fc" id="L18">        this.repositorio = RepositorioCitas.obtenerInstancia();</span>
-<span class="fc" id="L19">    }</span>
+<span class="fc" id="L18">    public CitaController() {</span>
+        // CAMBIO IMPORTANTE: Usar MongoDB en lugar de repositorio en memoria
+<span class="fc" id="L20">        this.repositorio = RepositorioCitasMongo.obtenerInstancia();</span>
+<span class="fc" id="L21">        System.out.println(&quot;✅ CitaController inicializado con MongoDB&quot;);</span>
+<span class="fc" id="L22">    }</span>
     
     /**
      * Agenda una nueva cita
@@ -28,33 +31,40 @@ public class CitaController {
                                          LocalDate fecha, LocalTime hora, 
                                          String motivo) {
         
+<span class="fc" id="L34">        System.out.println(&quot;📝 Intentando agendar cita:&quot;);</span>
+<span class="fc" id="L35">        System.out.println(&quot;   - Servicio: &quot; + servicio);</span>
+<span class="fc" id="L36">        System.out.println(&quot;   - Personal: &quot; + personal);</span>
+<span class="fc" id="L37">        System.out.println(&quot;   - Fecha: &quot; + fecha);</span>
+<span class="fc" id="L38">        System.out.println(&quot;   - Hora: &quot; + hora);</span>
+        
         // 1. Validar campos obligatorios
-<span class="fc" id="L32">        ValidadorCitas.TipoError error = ValidadorCitas.validarCitaCompleta(</span>
-<span class="fc" id="L33">            servicio, personal, fecha, hora, repositorio.obtenerTodas()</span>
+<span class="fc" id="L41">        ValidadorCitas.TipoError error = ValidadorCitas.validarCitaCompleta(</span>
+<span class="fc" id="L42">            servicio, personal, fecha, hora, repositorio.obtenerTodas()</span>
         );
         
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (error != ValidadorCitas.TipoError.NINGUNO) {</span>
-<span class="fc" id="L37">            return new ResultadoOperacion(</span>
-                false, 
-                null, 
-<span class="fc" id="L40">                ValidadorCitas.obtenerMensajeError(error)</span>
-            );
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (error != ValidadorCitas.TipoError.NINGUNO) {</span>
+<span class="fc" id="L46">            String mensaje = ValidadorCitas.obtenerMensajeError(error);</span>
+<span class="fc" id="L47">            System.err.println(&quot;❌ Validación fallida: &quot; + mensaje);</span>
+<span class="fc" id="L48">            return new ResultadoOperacion(false, null, mensaje);</span>
         }
         
         // 2. Crear la cita
-<span class="fc" id="L45">        Cita nuevaCita = new Cita(servicio, personal, fecha, hora, motivo);</span>
+<span class="fc" id="L52">        Cita nuevaCita = new Cita(servicio, personal, fecha, hora, motivo);</span>
+<span class="fc" id="L53">        System.out.println(&quot;🆕 Cita creada con código: &quot; + nuevaCita.getCodigo());</span>
         
-        // 3. Guardar en el repositorio
-<span class="fc" id="L48">        boolean guardado = repositorio.guardar(nuevaCita);</span>
+        // 3. Guardar en MongoDB
+<span class="fc" id="L56">        boolean guardado = repositorio.guardar(nuevaCita);</span>
         
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (guardado) {</span>
-<span class="fc" id="L51">            return new ResultadoOperacion(</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (guardado) {</span>
+<span class="fc" id="L59">            System.out.println(&quot;✅ Cita guardada exitosamente en MongoDB&quot;);</span>
+<span class="fc" id="L60">            return new ResultadoOperacion(</span>
                 true,
-<span class="fc" id="L53">                nuevaCita.getCodigo(),</span>
-<span class="fc" id="L54">                &quot;Cita agendada exitosamente. Código: &quot; + nuevaCita.getCodigo()</span>
+<span class="fc" id="L62">                nuevaCita.getCodigo(),</span>
+<span class="fc" id="L63">                &quot;Cita agendada exitosamente. Código: &quot; + nuevaCita.getCodigo()</span>
             );
         } else {
-<span class="nc" id="L57">            return new ResultadoOperacion(</span>
+<span class="nc" id="L66">            System.err.println(&quot;❌ Error al guardar en MongoDB&quot;);</span>
+<span class="nc" id="L67">            return new ResultadoOperacion(</span>
                 false,
                 null,
                 &quot;Error al guardar la cita. El horario podría estar ocupado.&quot;
@@ -67,7 +77,9 @@ public class CitaController {
      * HU-02: Consultar disponibilidad en tiempo real
      */
     public List&lt;LocalTime&gt; obtenerHorariosOcupados(String personal, LocalDate fecha) {
-<span class="fc" id="L70">        return repositorio.obtenerHorariosOcupados(personal, fecha);</span>
+<span class="fc" id="L80">        List&lt;LocalTime&gt; horarios = repositorio.obtenerHorariosOcupados(personal, fecha);</span>
+<span class="fc" id="L81">        System.out.println(&quot;🕐 Horarios ocupados para &quot; + personal + &quot; el &quot; + fecha + &quot;: &quot; + horarios.size());</span>
+<span class="fc" id="L82">        return horarios;</span>
     }
     
     /**
@@ -75,7 +87,10 @@ public class CitaController {
      * HU-02: Consultar disponibilidad en tiempo real
      */
     public boolean verificarDisponibilidad(String personal, LocalDate fecha, LocalTime hora) {
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        return !repositorio.estaOcupado(personal, fecha, hora);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        boolean disponible = !repositorio.estaOcupado(personal, fecha, hora);</span>
+<span class="fc" id="L91">        System.out.println(&quot;🔍 Disponibilidad &quot; + personal + &quot; &quot; + fecha + &quot; &quot; + hora + &quot;: &quot; + </span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">                          (disponible ? &quot;DISPONIBLE&quot; : &quot;OCUPADO&quot;));</span>
+<span class="fc" id="L93">        return disponible;</span>
     }
     
     /**
@@ -83,11 +98,14 @@ public class CitaController {
      * HU-04: Cancelar cita
      */
     public ResultadoOperacion cancelarCita(String codigo) {
-        // 1. Buscar la cita
-<span class="fc" id="L87">        Cita cita = repositorio.buscarPorCodigo(codigo);</span>
+<span class="fc" id="L101">        System.out.println(&quot;🗑️ Intentando cancelar cita: &quot; + codigo);</span>
         
-<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (cita == null) {</span>
-<span class="fc" id="L90">            return new ResultadoOperacion(</span>
+        // 1. Buscar la cita
+<span class="fc" id="L104">        Cita cita = repositorio.buscarPorCodigo(codigo);</span>
+        
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (cita == null) {</span>
+<span class="fc" id="L107">            System.err.println(&quot;❌ Cita no encontrada: &quot; + codigo);</span>
+<span class="fc" id="L108">            return new ResultadoOperacion(</span>
                 false,
                 null,
                 &quot;No se encontró la cita con el código: &quot; + codigo
@@ -95,25 +113,28 @@ public class CitaController {
         }
         
         // 2. Validar si puede cancelarse
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (!cita.puedeCancelar()) {</span>
-<span class="nc" id="L99">            return new ResultadoOperacion(</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (!cita.puedeCancelar()) {</span>
+<span class="nc" id="L117">            System.err.println(&quot;❌ Cita no puede cancelarse (menos de 2 horas)&quot;);</span>
+<span class="nc" id="L118">            return new ResultadoOperacion(</span>
                 false,
                 null,
                 &quot;No puede cancelar la cita. Debe hacerlo con al menos 2 horas de anticipación.&quot;
             );
         }
         
-        // 3. Cancelar
-<span class="fc" id="L107">        boolean cancelado = cita.cancelar();</span>
+        // 3. Cancelar usando el repositorio MongoDB
+<span class="fc" id="L126">        boolean cancelado = repositorio.cancelarCita(codigo);</span>
         
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        if (cancelado) {</span>
-<span class="fc" id="L110">            return new ResultadoOperacion(</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        if (cancelado) {</span>
+<span class="fc" id="L129">            System.out.println(&quot;✅ Cita cancelada exitosamente&quot;);</span>
+<span class="fc" id="L130">            return new ResultadoOperacion(</span>
                 true,
                 codigo,
                 &quot;Cita cancelada exitosamente.&quot;
             );
         } else {
-<span class="nc" id="L116">            return new ResultadoOperacion(</span>
+<span class="nc" id="L136">            System.err.println(&quot;❌ Error al cancelar la cita&quot;);</span>
+<span class="nc" id="L137">            return new ResultadoOperacion(</span>
                 false,
                 null,
                 &quot;Error al cancelar la cita.&quot;
@@ -126,40 +147,52 @@ public class CitaController {
      * HU-04: Cancelar cita
      */
     public List&lt;Cita&gt; obtenerCitasCancelables() {
-<span class="nc" id="L129">        return repositorio.obtenerCancelables();</span>
+<span class="nc" id="L150">        List&lt;Cita&gt; cancelables = repositorio.obtenerCancelables();</span>
+<span class="nc" id="L151">        System.out.println(&quot;📋 Citas cancelables: &quot; + cancelables.size());</span>
+<span class="nc" id="L152">        return cancelables;</span>
     }
     
     /**
      * Obtiene todas las citas pendientes
      */
     public List&lt;Cita&gt; obtenerCitasPendientes() {
-<span class="fc" id="L136">        return repositorio.obtenerPendientes();</span>
+<span class="fc" id="L159">        List&lt;Cita&gt; pendientes = repositorio.obtenerPendientes();</span>
+<span class="fc" id="L160">        System.out.println(&quot;⏳ Citas pendientes: &quot; + pendientes.size());</span>
+<span class="fc" id="L161">        return pendientes;</span>
     }
     
     /**
      * Obtiene todas las citas
      */
     public List&lt;Cita&gt; obtenerTodasLasCitas() {
-<span class="fc" id="L143">        return repositorio.obtenerTodas();</span>
+<span class="fc" id="L168">        List&lt;Cita&gt; todas = repositorio.obtenerTodas();</span>
+<span class="fc" id="L169">        System.out.println(&quot;📊 Total de citas: &quot; + todas.size());</span>
+<span class="fc" id="L170">        return todas;</span>
     }
     
     /**
      * Busca una cita por código
      */
     public Cita buscarCitaPorCodigo(String codigo) {
-<span class="fc" id="L150">        return repositorio.buscarPorCodigo(codigo);</span>
+<span class="fc" id="L177">        Cita cita = repositorio.buscarPorCodigo(codigo);</span>
+<span class="fc" id="L178">        System.out.println(&quot;🔎 Búsqueda por código &quot; + codigo + &quot;: &quot; + </span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                          (cita != null ? &quot;ENCONTRADA&quot; : &quot;NO ENCONTRADA&quot;));</span>
+<span class="fc" id="L180">        return cita;</span>
     }
     
     /**
      * Obtiene estadísticas de citas
      */
     public EstadisticasCitas obtenerEstadisticas() {
-<span class="fc" id="L157">        long pendientes = repositorio.contarPorEstado(Cita.EstadoCita.PENDIENTE);</span>
-<span class="fc" id="L158">        long atendidas = repositorio.contarPorEstado(Cita.EstadoCita.ATENDIDA);</span>
-<span class="fc" id="L159">        long canceladas = repositorio.contarPorEstado(Cita.EstadoCita.CANCELADA);</span>
-<span class="fc" id="L160">        long noAsistio = repositorio.contarPorEstado(Cita.EstadoCita.NO_ASISTIO);</span>
+<span class="fc" id="L187">        long pendientes = repositorio.contarPorEstado(Cita.EstadoCita.PENDIENTE);</span>
+<span class="fc" id="L188">        long atendidas = repositorio.contarPorEstado(Cita.EstadoCita.ATENDIDA);</span>
+<span class="fc" id="L189">        long canceladas = repositorio.contarPorEstado(Cita.EstadoCita.CANCELADA);</span>
+<span class="fc" id="L190">        long noAsistio = repositorio.contarPorEstado(Cita.EstadoCita.NO_ASISTIO);</span>
         
-<span class="fc" id="L162">        return new EstadisticasCitas(pendientes, atendidas, canceladas, noAsistio);</span>
+<span class="fc" id="L192">        System.out.println(&quot;📈 Estadísticas - P:&quot; + pendientes + &quot; A:&quot; + atendidas + </span>
+                          &quot; C:&quot; + canceladas + &quot; N:&quot; + noAsistio);
+        
+<span class="fc" id="L195">        return new EstadisticasCitas(pendientes, atendidas, canceladas, noAsistio);</span>
     }
     
     /**
@@ -170,22 +203,22 @@ public class CitaController {
         private String codigo;
         private String mensaje;
         
-<span class="fc" id="L173">        public ResultadoOperacion(boolean exitoso, String codigo, String mensaje) {</span>
-<span class="fc" id="L174">            this.exitoso = exitoso;</span>
-<span class="fc" id="L175">            this.codigo = codigo;</span>
-<span class="fc" id="L176">            this.mensaje = mensaje;</span>
-<span class="fc" id="L177">        }</span>
+<span class="fc" id="L206">        public ResultadoOperacion(boolean exitoso, String codigo, String mensaje) {</span>
+<span class="fc" id="L207">            this.exitoso = exitoso;</span>
+<span class="fc" id="L208">            this.codigo = codigo;</span>
+<span class="fc" id="L209">            this.mensaje = mensaje;</span>
+<span class="fc" id="L210">        }</span>
         
         public boolean isExitoso() {
-<span class="fc" id="L180">            return exitoso;</span>
+<span class="fc" id="L213">            return exitoso;</span>
         }
         
         public String getCodigo() {
-<span class="fc" id="L184">            return codigo;</span>
+<span class="fc" id="L217">            return codigo;</span>
         }
         
         public String getMensaje() {
-<span class="fc" id="L188">            return mensaje;</span>
+<span class="fc" id="L221">            return mensaje;</span>
         }
     }
     
@@ -198,31 +231,31 @@ public class CitaController {
         private long canceladas;
         private long noAsistio;
         
-<span class="fc" id="L201">        public EstadisticasCitas(long pendientes, long atendidas, long canceladas, long noAsistio) {</span>
-<span class="fc" id="L202">            this.pendientes = pendientes;</span>
-<span class="fc" id="L203">            this.atendidas = atendidas;</span>
-<span class="fc" id="L204">            this.canceladas = canceladas;</span>
-<span class="fc" id="L205">            this.noAsistio = noAsistio;</span>
-<span class="fc" id="L206">        }</span>
+<span class="fc" id="L234">        public EstadisticasCitas(long pendientes, long atendidas, long canceladas, long noAsistio) {</span>
+<span class="fc" id="L235">            this.pendientes = pendientes;</span>
+<span class="fc" id="L236">            this.atendidas = atendidas;</span>
+<span class="fc" id="L237">            this.canceladas = canceladas;</span>
+<span class="fc" id="L238">            this.noAsistio = noAsistio;</span>
+<span class="fc" id="L239">        }</span>
         
         public long getPendientes() {
-<span class="fc" id="L209">            return pendientes;</span>
+<span class="fc" id="L242">            return pendientes;</span>
         }
         
         public long getAtendidas() {
-<span class="nc" id="L213">            return atendidas;</span>
+<span class="fc" id="L246">            return atendidas;</span>
         }
         
         public long getCanceladas() {
-<span class="nc" id="L217">            return canceladas;</span>
+<span class="fc" id="L250">            return canceladas;</span>
         }
         
         public long getNoAsistio() {
-<span class="nc" id="L221">            return noAsistio;</span>
+<span class="nc" id="L254">            return noAsistio;</span>
         }
         
         public long getTotal() {
-<span class="fc" id="L225">            return pendientes + atendidas + canceladas + noAsistio;</span>
+<span class="fc" id="L258">            return pendientes + atendidas + canceladas + noAsistio;</span>
         }
     }
 }

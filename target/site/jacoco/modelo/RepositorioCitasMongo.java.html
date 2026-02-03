@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RepositorioCitasMongo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p3lab2brionesestefany</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">RepositorioCitasMongo.java</span></div><h1>RepositorioCitasMongo.java</h1><pre class="source lang-java linenums">package modelo;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.conversions.Bson;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.mongodb.client.model.Filters.*;
+
+/**
+ * Repositorio de Citas con persistencia en MongoDB
+ * Implementa operaciones CRUD completas
+ * 
+ * CRUD:
+ * - CREATE: guardar()
+ * - READ: buscarPorCodigo(), obtenerTodas(), obtenerPorPersonal(), etc.
+ * - UPDATE: actualizarCita(), cancelarCita()
+ * - DELETE: eliminarCita()
+ */
+public class RepositorioCitasMongo {
+    
+    private static RepositorioCitasMongo instancia;
+    private MongoCollection&lt;CitaDTO&gt; coleccionCitas;
+    private MongoDatabase database;
+    
+    private static final String COLECCION_CITAS = &quot;citas&quot;;
+    
+    /**
+     * Constructor privado (Singleton)
+     */
+<span class="fc" id="L38">    private RepositorioCitasMongo() {</span>
+        try {
+<span class="fc" id="L40">            MongoDBConfig config = MongoDBConfig.obtenerInstancia();</span>
+<span class="fc" id="L41">            database = config.getDatabase();</span>
+<span class="fc" id="L42">            coleccionCitas = database.getCollection(COLECCION_CITAS, CitaDTO.class);</span>
+            
+<span class="fc" id="L44">            System.out.println(&quot;✅ RepositorioCitasMongo inicializado&quot;);</span>
+<span class="fc" id="L45">            System.out.println(&quot;📁 Colección: &quot; + COLECCION_CITAS);</span>
+            
+<span class="nc" id="L47">        } catch (Exception e) {</span>
+<span class="nc" id="L48">            System.err.println(&quot;❌ Error al inicializar repositorio: &quot; + e.getMessage());</span>
+<span class="nc" id="L49">            e.printStackTrace();</span>
+<span class="fc" id="L50">        }</span>
+<span class="fc" id="L51">    }</span>
+    
+    /**
+     * Obtiene la instancia única del repositorio (Singleton)
+     */
+    public static RepositorioCitasMongo obtenerInstancia() {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (instancia == null) {</span>
+<span class="fc" id="L58">            synchronized (RepositorioCitasMongo.class) {</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">                if (instancia == null) {</span>
+<span class="fc" id="L60">                    instancia = new RepositorioCitasMongo();</span>
+                }
+<span class="fc" id="L62">            }</span>
+        }
+<span class="fc" id="L64">        return instancia;</span>
+    }
+    
+    // ==================== CREATE ====================
+    
+    /**
+     * Guarda una nueva cita en MongoDB
+     * 
+     * @param cita La cita a guardar
+     * @return true si se guardó exitosamente, false en caso contrario
+     */
+    public boolean guardar(Cita cita) {
+        try {
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">            if (cita == null) {</span>
+<span class="nc" id="L78">                System.err.println(&quot;⚠️ No se puede guardar una cita nula&quot;);</span>
+<span class="nc" id="L79">                return false;</span>
+            }
+            
+            // Validar que no exista solapamiento
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            if (!ValidadorCitas.validarNoSolapamiento(</span>
+<span class="fc" id="L84">                    cita.getPersonal(), </span>
+<span class="fc" id="L85">                    cita.getFecha(), </span>
+<span class="fc" id="L86">                    cita.getHora(), </span>
+<span class="fc" id="L87">                    obtenerTodas())) {</span>
+<span class="nc" id="L88">                System.err.println(&quot;⚠️ El horario ya está ocupado&quot;);</span>
+<span class="nc" id="L89">                return false;</span>
+            }
+            
+            // Convertir Cita a CitaDTO para MongoDB
+<span class="fc" id="L93">            CitaDTO citaDTO = convertirACitaDTO(cita);</span>
+            
+            // Insertar en MongoDB
+<span class="fc" id="L96">            coleccionCitas.insertOne(citaDTO);</span>
+            
+<span class="fc" id="L98">            System.out.println(&quot;✅ Cita guardada: &quot; + cita.getCodigo());</span>
+<span class="fc" id="L99">            return true;</span>
+            
+<span class="nc" id="L101">        } catch (Exception e) {</span>
+<span class="nc" id="L102">            System.err.println(&quot;❌ Error al guardar cita: &quot; + e.getMessage());</span>
+<span class="nc" id="L103">            e.printStackTrace();</span>
+<span class="nc" id="L104">            return false;</span>
+        }
+    }
+    
+    // ==================== READ ====================
+    
+    /**
+     * Busca una cita por su código
+     * 
+     * @param codigo Código único de la cita
+     * @return La cita encontrada o null
+     */
+    public Cita buscarPorCodigo(String codigo) {
+        try {
+<span class="fc" id="L118">            CitaDTO citaDTO = coleccionCitas.find(eq(&quot;codigo&quot;, codigo)).first();</span>
+            
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            if (citaDTO != null) {</span>
+<span class="fc" id="L121">                return convertirACita(citaDTO);</span>
+            }
+            
+<span class="fc" id="L124">            return null;</span>
+            
+<span class="nc" id="L126">        } catch (Exception e) {</span>
+<span class="nc" id="L127">            System.err.println(&quot;❌ Error al buscar cita: &quot; + e.getMessage());</span>
+<span class="nc" id="L128">            return null;</span>
+        }
+    }
+    
+    /**
+     * Obtiene todas las citas de la base de datos
+     * 
+     * @return Lista de todas las citas
+     */
+    public List&lt;Cita&gt; obtenerTodas() {
+<span class="fc" id="L138">        List&lt;Cita&gt; citas = new ArrayList&lt;&gt;();</span>
+        
+        try {
+<span class="fc" id="L141">            coleccionCitas.find().into(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L142">                .forEach(citaDTO -&gt; citas.add(convertirACita(citaDTO)));</span>
+                
+<span class="nc" id="L144">        } catch (Exception e) {</span>
+<span class="nc" id="L145">            System.err.println(&quot;❌ Error al obtener citas: &quot; + e.getMessage());</span>
+<span class="fc" id="L146">        }</span>
+        
+<span class="fc" id="L148">        return citas;</span>
+    }
+    
+    /**
+     * Obtiene citas por personal médico
+     * 
+     * @param personal Nombre del personal
+     * @return Lista de citas del personal especificado
+     */
+    public List&lt;Cita&gt; obtenerPorPersonal(String personal) {
+<span class="nc" id="L158">        List&lt;Cita&gt; citas = new ArrayList&lt;&gt;();</span>
+        
+        try {
+<span class="nc" id="L161">            coleccionCitas.find(eq(&quot;personal&quot;, personal)).into(new ArrayList&lt;&gt;())</span>
+<span class="nc" id="L162">                .forEach(citaDTO -&gt; citas.add(convertirACita(citaDTO)));</span>
+                
+<span class="nc" id="L164">        } catch (Exception e) {</span>
+<span class="nc" id="L165">            System.err.println(&quot;❌ Error al obtener citas por personal: &quot; + e.getMessage());</span>
+<span class="nc" id="L166">        }</span>
+        
+<span class="nc" id="L168">        return citas;</span>
+    }
+    
+    /**
+     * Obtiene citas por fecha
+     * 
+     * @param fecha Fecha a buscar
+     * @return Lista de citas en esa fecha
+     */
+    public List&lt;Cita&gt; obtenerPorFecha(LocalDate fecha) {
+<span class="nc" id="L178">        List&lt;Cita&gt; citas = new ArrayList&lt;&gt;();</span>
+        
+        try {
+<span class="nc" id="L181">            String fechaStr = fecha.toString();</span>
+<span class="nc" id="L182">            coleccionCitas.find(eq(&quot;fecha&quot;, fechaStr)).into(new ArrayList&lt;&gt;())</span>
+<span class="nc" id="L183">                .forEach(citaDTO -&gt; citas.add(convertirACita(citaDTO)));</span>
+                
+<span class="nc" id="L185">        } catch (Exception e) {</span>
+<span class="nc" id="L186">            System.err.println(&quot;❌ Error al obtener citas por fecha: &quot; + e.getMessage());</span>
+<span class="nc" id="L187">        }</span>
+        
+<span class="nc" id="L189">        return citas;</span>
+    }
+    
+    /**
+     * Obtiene citas pendientes
+     * 
+     * @return Lista de citas con estado PENDIENTE
+     */
+    public List&lt;Cita&gt; obtenerPendientes() {
+<span class="fc" id="L198">        return obtenerTodas().stream()</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">            .filter(c -&gt; c.getEstado() == Cita.EstadoCita.PENDIENTE)</span>
+<span class="fc" id="L200">            .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Obtiene citas cancelables (pendientes con más de 2 horas de anticipación)
+     * 
+     * @return Lista de citas que pueden ser canceladas
+     */
+    public List&lt;Cita&gt; obtenerCancelables() {
+<span class="nc" id="L209">        return obtenerTodas().stream()</span>
+<span class="nc" id="L210">            .filter(Cita::puedeCancelar)</span>
+<span class="nc" id="L211">            .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Verifica si un horario está ocupado
+     * 
+     * @param personal Nombre del personal
+     * @param fecha Fecha de la cita
+     * @param hora Hora de la cita
+     * @return true si está ocupado, false si está libre
+     */
+    public boolean estaOcupado(String personal, LocalDate fecha, LocalTime hora) {
+        try {
+<span class="fc" id="L224">            Bson filtro = and(</span>
+<span class="fc" id="L225">                eq(&quot;personal&quot;, personal),</span>
+<span class="fc" id="L226">                eq(&quot;fecha&quot;, fecha.toString()),</span>
+<span class="fc" id="L227">                eq(&quot;hora&quot;, hora.toString()),</span>
+<span class="fc" id="L228">                eq(&quot;estado&quot;, &quot;PENDIENTE&quot;)</span>
+            );
+            
+<span class="fc bfc" id="L231" title="All 2 branches covered.">            return coleccionCitas.find(filtro).first() != null;</span>
+            
+<span class="nc" id="L233">        } catch (Exception e) {</span>
+<span class="nc" id="L234">            System.err.println(&quot;❌ Error al verificar disponibilidad: &quot; + e.getMessage());</span>
+<span class="nc" id="L235">            return false;</span>
+        }
+    }
+    
+    /**
+     * Obtiene horarios ocupados para un personal en una fecha
+     * 
+     * @param personal Nombre del personal
+     * @param fecha Fecha a consultar
+     * @return Lista de horarios ocupados
+     */
+    public List&lt;LocalTime&gt; obtenerHorariosOcupados(String personal, LocalDate fecha) {
+<span class="fc" id="L247">        List&lt;LocalTime&gt; horarios = new ArrayList&lt;&gt;();</span>
+        
+        try {
+<span class="fc" id="L250">            Bson filtro = and(</span>
+<span class="fc" id="L251">                eq(&quot;personal&quot;, personal),</span>
+<span class="fc" id="L252">                eq(&quot;fecha&quot;, fecha.toString()),</span>
+<span class="fc" id="L253">                eq(&quot;estado&quot;, &quot;PENDIENTE&quot;)</span>
+            );
+            
+<span class="fc" id="L256">            coleccionCitas.find(filtro).into(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L257">                .forEach(citaDTO -&gt; horarios.add(LocalTime.parse(citaDTO.getHora())));</span>
+                
+<span class="nc" id="L259">        } catch (Exception e) {</span>
+<span class="nc" id="L260">            System.err.println(&quot;❌ Error al obtener horarios ocupados: &quot; + e.getMessage());</span>
+<span class="fc" id="L261">        }</span>
+        
+<span class="fc" id="L263">        return horarios;</span>
+    }
+    
+    /**
+     * Cuenta citas por estado
+     * 
+     * @param estado Estado de la cita
+     * @return Número de citas en ese estado
+     */
+    public long contarPorEstado(Cita.EstadoCita estado) {
+        try {
+<span class="fc" id="L274">            return coleccionCitas.countDocuments(eq(&quot;estado&quot;, estado.name()));</span>
+<span class="nc" id="L275">        } catch (Exception e) {</span>
+<span class="nc" id="L276">            System.err.println(&quot;❌ Error al contar por estado: &quot; + e.getMessage());</span>
+<span class="nc" id="L277">            return 0;</span>
+        }
+    }
+    
+    /**
+     * Obtiene la cantidad total de citas
+     * 
+     * @return Total de citas en la base de datos
+     */
+    public long contarTotal() {
+        try {
+<span class="nc" id="L288">            return coleccionCitas.countDocuments();</span>
+<span class="nc" id="L289">        } catch (Exception e) {</span>
+<span class="nc" id="L290">            System.err.println(&quot;❌ Error al contar total: &quot; + e.getMessage());</span>
+<span class="nc" id="L291">            return 0;</span>
+        }
+    }
+    
+    // ==================== UPDATE ====================
+    
+    /**
+     * Actualiza una cita existente
+     * 
+     * @param cita Cita con los datos actualizados
+     * @return true si se actualizó exitosamente
+     */
+    public boolean actualizarCita(Cita cita) {
+        try {
+<span class="pc bpc" id="L305" title="2 of 4 branches missed.">            if (cita == null || cita.getCodigo() == null) {</span>
+<span class="nc" id="L306">                return false;</span>
+            }
+            
+<span class="fc" id="L309">            CitaDTO citaDTO = convertirACitaDTO(cita);</span>
+            
+<span class="fc" id="L311">            Bson filtro = eq(&quot;codigo&quot;, cita.getCodigo());</span>
+<span class="fc" id="L312">            Bson actualizacion = Updates.combine(</span>
+<span class="fc" id="L313">                Updates.set(&quot;servicio&quot;, citaDTO.getServicio()),</span>
+<span class="fc" id="L314">                Updates.set(&quot;personal&quot;, citaDTO.getPersonal()),</span>
+<span class="fc" id="L315">                Updates.set(&quot;fecha&quot;, citaDTO.getFecha()),</span>
+<span class="fc" id="L316">                Updates.set(&quot;hora&quot;, citaDTO.getHora()),</span>
+<span class="fc" id="L317">                Updates.set(&quot;motivo&quot;, citaDTO.getMotivo()),</span>
+<span class="fc" id="L318">                Updates.set(&quot;estado&quot;, citaDTO.getEstado())</span>
+            );
+            
+<span class="fc" id="L321">            coleccionCitas.updateOne(filtro, actualizacion);</span>
+            
+<span class="fc" id="L323">            System.out.println(&quot;✅ Cita actualizada: &quot; + cita.getCodigo());</span>
+<span class="fc" id="L324">            return true;</span>
+            
+<span class="nc" id="L326">        } catch (Exception e) {</span>
+<span class="nc" id="L327">            System.err.println(&quot;❌ Error al actualizar cita: &quot; + e.getMessage());</span>
+<span class="nc" id="L328">            return false;</span>
+        }
+    }
+    
+    /**
+     * Cancela una cita por código
+     * 
+     * @param codigo Código de la cita a cancelar
+     * @return true si se canceló exitosamente
+     */
+    public boolean cancelarCita(String codigo) {
+        try {
+<span class="fc" id="L340">            Cita cita = buscarPorCodigo(codigo);</span>
+            
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">            if (cita == null) {</span>
+<span class="nc" id="L343">                System.err.println(&quot;⚠️ Cita no encontrada: &quot; + codigo);</span>
+<span class="nc" id="L344">                return false;</span>
+            }
+            
+<span class="pc bpc" id="L347" title="1 of 2 branches missed.">            if (!cita.puedeCancelar()) {</span>
+<span class="nc" id="L348">                System.err.println(&quot;⚠️ La cita no puede ser cancelada&quot;);</span>
+<span class="nc" id="L349">                return false;</span>
+            }
+            
+<span class="fc" id="L352">            boolean cancelado = cita.cancelar();</span>
+            
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">            if (cancelado) {</span>
+<span class="fc" id="L355">                return actualizarCita(cita);</span>
+            }
+            
+<span class="nc" id="L358">            return false;</span>
+            
+<span class="nc" id="L360">        } catch (Exception e) {</span>
+<span class="nc" id="L361">            System.err.println(&quot;❌ Error al cancelar cita: &quot; + e.getMessage());</span>
+<span class="nc" id="L362">            return false;</span>
+        }
+    }
+    
+    // ==================== DELETE ====================
+    
+    /**
+     * Elimina una cita por código
+     * 
+     * @param codigo Código de la cita a eliminar
+     * @return true si se eliminó exitosamente
+     */
+    public boolean eliminarCita(String codigo) {
+        try {
+<span class="nc bnc" id="L376" title="All 4 branches missed.">            if (codigo == null || codigo.trim().isEmpty()) {</span>
+<span class="nc" id="L377">                return false;</span>
+            }
+            
+<span class="nc" id="L380">            Bson filtro = eq(&quot;codigo&quot;, codigo);</span>
+<span class="nc bnc" id="L381" title="All 2 branches missed.">            boolean resultado = coleccionCitas.deleteOne(filtro).getDeletedCount() &gt; 0;</span>
+            
+<span class="nc bnc" id="L383" title="All 2 branches missed.">            if (resultado) {</span>
+<span class="nc" id="L384">                System.out.println(&quot;✅ Cita eliminada: &quot; + codigo);</span>
+            } else {
+<span class="nc" id="L386">                System.err.println(&quot;⚠️ No se encontró la cita: &quot; + codigo);</span>
+            }
+            
+<span class="nc" id="L389">            return resultado;</span>
+            
+<span class="nc" id="L391">        } catch (Exception e) {</span>
+<span class="nc" id="L392">            System.err.println(&quot;❌ Error al eliminar cita: &quot; + e.getMessage());</span>
+<span class="nc" id="L393">            return false;</span>
+        }
+    }
+    
+    /**
+     * Elimina todas las citas de la colección
+     * CUIDADO: Esta operación es irreversible
+     * 
+     * @return true si se eliminaron todas las citas
+     */
+    public boolean eliminarTodas() {
+        try {
+<span class="fc" id="L405">            coleccionCitas.deleteMany(new org.bson.Document());</span>
+<span class="fc" id="L406">            System.out.println(&quot;⚠️ Todas las citas han sido eliminadas&quot;);</span>
+<span class="fc" id="L407">            return true;</span>
+<span class="nc" id="L408">        } catch (Exception e) {</span>
+<span class="nc" id="L409">            System.err.println(&quot;❌ Error al eliminar todas las citas: &quot; + e.getMessage());</span>
+<span class="nc" id="L410">            return false;</span>
+        }
+    }
+    
+    // ==================== MÉTODOS DE CONVERSIÓN ====================
+    
+    /**
+     * Convierte una Cita a CitaDTO para MongoDB
+     */
+    private CitaDTO convertirACitaDTO(Cita cita) {
+<span class="fc" id="L420">        CitaDTO dto = new CitaDTO();</span>
+<span class="fc" id="L421">        dto.setCodigo(cita.getCodigo());</span>
+<span class="fc" id="L422">        dto.setServicio(cita.getServicio());</span>
+<span class="fc" id="L423">        dto.setPersonal(cita.getPersonal());</span>
+<span class="fc" id="L424">        dto.setFecha(cita.getFecha().toString());</span>
+<span class="fc" id="L425">        dto.setHora(cita.getHora().toString());</span>
+<span class="fc" id="L426">        dto.setMotivo(cita.getMotivo());</span>
+<span class="fc" id="L427">        dto.setEstado(cita.getEstado().name());</span>
+<span class="fc" id="L428">        dto.setFechaCreacion(cita.getFechaCreacion().toString());</span>
+<span class="fc" id="L429">        return dto;</span>
+    }
+    
+    /**
+     * Convierte un CitaDTO de MongoDB a Cita
+     */
+    private Cita convertirACita(CitaDTO dto) {
+<span class="fc" id="L436">        Cita cita = new Cita();</span>
+<span class="fc" id="L437">        cita.setCodigo(dto.getCodigo());</span>
+<span class="fc" id="L438">        cita.setServicio(dto.getServicio());</span>
+<span class="fc" id="L439">        cita.setPersonal(dto.getPersonal());</span>
+<span class="fc" id="L440">        cita.setFecha(LocalDate.parse(dto.getFecha()));</span>
+<span class="fc" id="L441">        cita.setHora(LocalTime.parse(dto.getHora()));</span>
+<span class="fc" id="L442">        cita.setMotivo(dto.getMotivo());</span>
+<span class="fc" id="L443">        cita.setEstado(Cita.EstadoCita.valueOf(dto.getEstado()));</span>
+<span class="fc" id="L444">        return cita;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

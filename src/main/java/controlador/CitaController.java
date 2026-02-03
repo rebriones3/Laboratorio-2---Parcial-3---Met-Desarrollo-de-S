@@ -9,13 +9,16 @@ import java.util.List;
 /**
  * Controlador principal para la gestión de citas
  * Coordina las operaciones entre la vista y el modelo
+ * MODIFICADO: Ahora usa RepositorioCitasMongo en lugar de RepositorioCitas
  */
 public class CitaController {
     
-    private RepositorioCitas repositorio;
+    private RepositorioCitasMongo repositorio;
     
     public CitaController() {
-        this.repositorio = RepositorioCitas.obtenerInstancia();
+        // CAMBIO IMPORTANTE: Usar MongoDB en lugar de repositorio en memoria
+        this.repositorio = RepositorioCitasMongo.obtenerInstancia();
+        System.out.println("✅ CitaController inicializado con MongoDB");
     }
     
     /**
@@ -28,32 +31,39 @@ public class CitaController {
                                          LocalDate fecha, LocalTime hora, 
                                          String motivo) {
         
+        System.out.println("📝 Intentando agendar cita:");
+        System.out.println("   - Servicio: " + servicio);
+        System.out.println("   - Personal: " + personal);
+        System.out.println("   - Fecha: " + fecha);
+        System.out.println("   - Hora: " + hora);
+        
         // 1. Validar campos obligatorios
         ValidadorCitas.TipoError error = ValidadorCitas.validarCitaCompleta(
             servicio, personal, fecha, hora, repositorio.obtenerTodas()
         );
         
         if (error != ValidadorCitas.TipoError.NINGUNO) {
-            return new ResultadoOperacion(
-                false, 
-                null, 
-                ValidadorCitas.obtenerMensajeError(error)
-            );
+            String mensaje = ValidadorCitas.obtenerMensajeError(error);
+            System.err.println("❌ Validación fallida: " + mensaje);
+            return new ResultadoOperacion(false, null, mensaje);
         }
         
         // 2. Crear la cita
         Cita nuevaCita = new Cita(servicio, personal, fecha, hora, motivo);
+        System.out.println("🆕 Cita creada con código: " + nuevaCita.getCodigo());
         
-        // 3. Guardar en el repositorio
+        // 3. Guardar en MongoDB
         boolean guardado = repositorio.guardar(nuevaCita);
         
         if (guardado) {
+            System.out.println("✅ Cita guardada exitosamente en MongoDB");
             return new ResultadoOperacion(
                 true,
                 nuevaCita.getCodigo(),
                 "Cita agendada exitosamente. Código: " + nuevaCita.getCodigo()
             );
         } else {
+            System.err.println("❌ Error al guardar en MongoDB");
             return new ResultadoOperacion(
                 false,
                 null,
@@ -67,7 +77,9 @@ public class CitaController {
      * HU-02: Consultar disponibilidad en tiempo real
      */
     public List<LocalTime> obtenerHorariosOcupados(String personal, LocalDate fecha) {
-        return repositorio.obtenerHorariosOcupados(personal, fecha);
+        List<LocalTime> horarios = repositorio.obtenerHorariosOcupados(personal, fecha);
+        System.out.println("🕐 Horarios ocupados para " + personal + " el " + fecha + ": " + horarios.size());
+        return horarios;
     }
     
     /**
@@ -75,7 +87,10 @@ public class CitaController {
      * HU-02: Consultar disponibilidad en tiempo real
      */
     public boolean verificarDisponibilidad(String personal, LocalDate fecha, LocalTime hora) {
-        return !repositorio.estaOcupado(personal, fecha, hora);
+        boolean disponible = !repositorio.estaOcupado(personal, fecha, hora);
+        System.out.println("🔍 Disponibilidad " + personal + " " + fecha + " " + hora + ": " + 
+                          (disponible ? "DISPONIBLE" : "OCUPADO"));
+        return disponible;
     }
     
     /**
@@ -83,10 +98,13 @@ public class CitaController {
      * HU-04: Cancelar cita
      */
     public ResultadoOperacion cancelarCita(String codigo) {
+        System.out.println("🗑️ Intentando cancelar cita: " + codigo);
+        
         // 1. Buscar la cita
         Cita cita = repositorio.buscarPorCodigo(codigo);
         
         if (cita == null) {
+            System.err.println("❌ Cita no encontrada: " + codigo);
             return new ResultadoOperacion(
                 false,
                 null,
@@ -96,6 +114,7 @@ public class CitaController {
         
         // 2. Validar si puede cancelarse
         if (!cita.puedeCancelar()) {
+            System.err.println("❌ Cita no puede cancelarse (menos de 2 horas)");
             return new ResultadoOperacion(
                 false,
                 null,
@@ -103,16 +122,18 @@ public class CitaController {
             );
         }
         
-        // 3. Cancelar
-        boolean cancelado = cita.cancelar();
+        // 3. Cancelar usando el repositorio MongoDB
+        boolean cancelado = repositorio.cancelarCita(codigo);
         
         if (cancelado) {
+            System.out.println("✅ Cita cancelada exitosamente");
             return new ResultadoOperacion(
                 true,
                 codigo,
                 "Cita cancelada exitosamente."
             );
         } else {
+            System.err.println("❌ Error al cancelar la cita");
             return new ResultadoOperacion(
                 false,
                 null,
@@ -126,28 +147,37 @@ public class CitaController {
      * HU-04: Cancelar cita
      */
     public List<Cita> obtenerCitasCancelables() {
-        return repositorio.obtenerCancelables();
+        List<Cita> cancelables = repositorio.obtenerCancelables();
+        System.out.println("📋 Citas cancelables: " + cancelables.size());
+        return cancelables;
     }
     
     /**
      * Obtiene todas las citas pendientes
      */
     public List<Cita> obtenerCitasPendientes() {
-        return repositorio.obtenerPendientes();
+        List<Cita> pendientes = repositorio.obtenerPendientes();
+        System.out.println("⏳ Citas pendientes: " + pendientes.size());
+        return pendientes;
     }
     
     /**
      * Obtiene todas las citas
      */
     public List<Cita> obtenerTodasLasCitas() {
-        return repositorio.obtenerTodas();
+        List<Cita> todas = repositorio.obtenerTodas();
+        System.out.println("📊 Total de citas: " + todas.size());
+        return todas;
     }
     
     /**
      * Busca una cita por código
      */
     public Cita buscarCitaPorCodigo(String codigo) {
-        return repositorio.buscarPorCodigo(codigo);
+        Cita cita = repositorio.buscarPorCodigo(codigo);
+        System.out.println("🔎 Búsqueda por código " + codigo + ": " + 
+                          (cita != null ? "ENCONTRADA" : "NO ENCONTRADA"));
+        return cita;
     }
     
     /**
@@ -158,6 +188,9 @@ public class CitaController {
         long atendidas = repositorio.contarPorEstado(Cita.EstadoCita.ATENDIDA);
         long canceladas = repositorio.contarPorEstado(Cita.EstadoCita.CANCELADA);
         long noAsistio = repositorio.contarPorEstado(Cita.EstadoCita.NO_ASISTIO);
+        
+        System.out.println("📈 Estadísticas - P:" + pendientes + " A:" + atendidas + 
+                          " C:" + canceladas + " N:" + noAsistio);
         
         return new EstadisticasCitas(pendientes, atendidas, canceladas, noAsistio);
     }

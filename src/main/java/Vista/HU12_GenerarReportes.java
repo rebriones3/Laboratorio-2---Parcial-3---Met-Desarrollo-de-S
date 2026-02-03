@@ -9,20 +9,10 @@ public class HU12_GenerarReportes extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                HU12_GenerarReportes frame = new HU12_GenerarReportes();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 
     public HU12_GenerarReportes() {
         setTitle("Sistema de Gestión de Citas - Generar Reportes y Estadísticas");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 1300, 800);
 
         contentPane = new JPanel();

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="controlador.CitaControllerTest" time="0.144" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="controlador.CitaControllerTest" time="0.677" tests="14" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\test-classes;C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\classes;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.1\junit-jupiter-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.1\junit-jupiter-params-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;"/>
+    <property name="java.class.path" value="C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\test-classes;C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\classes;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.1\junit-jupiter-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.1\junit-jupiter-params-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\mongodb-driver-sync\5.1.4\mongodb-driver-sync-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\bson\5.1.4\bson-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\mongodb-driver-core\5.1.4\mongodb-driver-core-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\bson-record-codec\5.1.4\bson-record-codec-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\slf4j\slf4j-api\2.0.9\slf4j-api-2.0.9.jar;C:\Users\PERSONAL\.m2\repository\org\slf4j\slf4j-simple\2.0.9\slf4j-simple-2.0.9.jar;"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -15,9 +15,9 @@
     <property name="user.country" value="ES"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire5864386778192221649\surefirebooter-20260202022646156_3.jar C:\Users\PERSONAL\AppData\Local\Temp\surefire5864386778192221649 2026-02-02T02-26-46_055-jvmRun1 surefire-20260202022646156_1tmp surefire_0-20260202022646156_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire4079580039560668792\surefirebooter-20260202202542107_3.jar C:\Users\PERSONAL\AppData\Local\Temp\surefire4079580039560668792 2026-02-02T20-25-42_009-jvmRun1 surefire-20260202202542107_1tmp surefire_0-20260202202542107_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\test-classes;C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\classes;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.1\junit-jupiter-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.1\junit-jupiter-params-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;"/>
+    <property name="surefire.test.class.path" value="C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\test-classes;C:\Users\PERSONAL\Desktop\UNIVERSIDAD\TERCER SEMESTRE\Met. de Desarrollo de Software\3\P3Lab2BrionesEstefany\target\classes;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.1\junit-jupiter-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.1\junit-jupiter-api-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-commons\1.10.1\junit-platform-commons-1.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.1\junit-jupiter-params-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.1\junit-jupiter-engine-5.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\junit\platform\junit-platform-engine\1.10.1\junit-platform-engine-1.10.1.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\mongodb-driver-sync\5.1.4\mongodb-driver-sync-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\bson\5.1.4\bson-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\mongodb-driver-core\5.1.4\mongodb-driver-core-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\mongodb\bson-record-codec\5.1.4\bson-record-codec-5.1.4.jar;C:\Users\PERSONAL\.m2\repository\org\slf4j\slf4j-api\2.0.9\slf4j-api-2.0.9.jar;C:\Users\PERSONAL\.m2\repository\org\slf4j\slf4j-simple\2.0.9\slf4j-simple-2.0.9.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\PERSONAL"/>
     <property name="user.language" value="es"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire5864386778192221649\surefirebooter-20260202022646156_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\PERSONAL\AppData\Local\Temp\surefire4079580039560668792\surefirebooter-20260202202542107_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.8+12-LTS-250"/>
@@ -59,18 +59,321 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="obtenerHorariosOcupados_debe_retornar_lista_correcta" classname="controlador.CitaControllerTest" time="0.086"/>
-  <testcase name="agendarCita_debe_fallar_con_horario_ocupado" classname="controlador.CitaControllerTest" time="0.002"/>
-  <testcase name="cancelarCita_debe_fallar_con_codigo_inexistente" classname="controlador.CitaControllerTest" time="0.002"/>
-  <testcase name="verificarDisponibilidad_debe_retornar_true_con_horario_libre" classname="controlador.CitaControllerTest" time="0.001"/>
-  <testcase name="buscarCitaPorCodigo_debe_retornar_cita_correcta" classname="controlador.CitaControllerTest" time="0.003"/>
-  <testcase name="agendarCita_debe_fallar_con_campos_incompletos" classname="controlador.CitaControllerTest" time="0.002"/>
-  <testcase name="agendarCita_debe_fallar_con_fecha_pasada" classname="controlador.CitaControllerTest" time="0.001"/>
-  <testcase name="obtenerTodasLasCitas_debe_retornar_lista_completa" classname="controlador.CitaControllerTest" time="0.001"/>
-  <testcase name="agendarCita_debe_crear_cita_exitosamente" classname="controlador.CitaControllerTest" time="0.001"/>
-  <testcase name="cancelarCita_debe_funcionar_con_codigo_valido" classname="controlador.CitaControllerTest" time="0.002"/>
-  <testcase name="verificarDisponibilidad_debe_retornar_false_con_horario_ocupado" classname="controlador.CitaControllerTest" time="0.001"/>
-  <testcase name="obtenerEstadisticas_debe_calcular_correctamente" classname="controlador.CitaControllerTest" time="0.003"/>
-  <testcase name="obtenerCitasPendientes_debe_retornar_solo_pendientes" classname="controlador.CitaControllerTest" time="0.002"/>
-  <testcase name="buscarCitaPorCodigo_debe_retornar_null_con_codigo_inexistente" classname="controlador.CitaControllerTest" time="0.001"/>
+  <testcase name="agendarCita_debe_crear_cita_exitosamente" classname="controlador.CitaControllerTest" time="0.465">
+    <system-out><![CDATA[
+============================================================
+🔌 INICIANDO CONEXIÓN A MONGODB
+============================================================
+⚙️  Configuración establecida
+   URL: mongodb://localhost:27017
+   Base de datos: sistema_citas
+✅ CONEXIÓN EXITOSA
+📁 Base de datos activa: sistema_citas
+============================================================
+
+✅ RepositorioCitasMongo inicializado
+📁 Colección: citas
+✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta General
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-9F9A92B4
+✅ Cita guardada: CITA-9F9A92B4
+✅ Cita guardada exitosamente en MongoDB
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+    <system-err><![CDATA[[main] INFO org.mongodb.driver.client - MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync", "version": "5.1.4"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Oracle Corporation/21.0.8+12-LTS-250"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@79ab34c1, com.mongodb.Jep395RecordCodecProvider@1698d7c0, com.mongodb.KotlinCodecProvider@281f23f2]}, ProvidersCodecRegistry{codecProviders=[org.bson.codecs.pojo.PojoCodecProvider@87abc48]}]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+[cluster-ClusterId{value='69814e979908d6470010a838', description='null'}-localhost:27017] INFO org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=27, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=23722800}
+]]></system-err>
+  </testcase>
+  <testcase name="agendarCita_debe_rechazar_campos_vacios" classname="controlador.CitaControllerTest" time="0.007">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: null
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+    <system-err><![CDATA[❌ Validación fallida: Por favor complete todos los campos obligatorios.
+]]></system-err>
+  </testcase>
+  <testcase name="agendarCita_debe_rechazar_fechas_pasadas" classname="controlador.CitaControllerTest" time="0.007">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta General
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-01
+   - Hora: 10:00
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+    <system-err><![CDATA[❌ Validación fallida: No puede agendar citas en fechas pasadas.
+]]></system-err>
+  </testcase>
+  <testcase name="agendarCita_debe_prevenir_solapamiento" classname="controlador.CitaControllerTest" time="0.016">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-6BEDE32C
+✅ Cita guardada: CITA-6BEDE32C
+✅ Cita guardada exitosamente en MongoDB
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+    <system-err><![CDATA[❌ Validación fallida: El horario seleccionado ya está ocupado. Por favor seleccione otro.
+]]></system-err>
+  </testcase>
+  <testcase name="verificarDisponibilidad_debe_retornar_false_con_horario_ocupado" classname="controlador.CitaControllerTest" time="0.019">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-0DC627A8
+✅ Cita guardada: CITA-0DC627A8
+✅ Cita guardada exitosamente en MongoDB
+🔍 Disponibilidad Dr. Juan Pérez 2026-02-03 10:00: OCUPADO
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="verificarDisponibilidad_debe_retornar_true_con_horario_libre" classname="controlador.CitaControllerTest" time="0.009">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-BC881AD0
+✅ Cita guardada: CITA-BC881AD0
+✅ Cita guardada exitosamente en MongoDB
+🔍 Disponibilidad Dr. Juan Pérez 2026-02-03 14:00: DISPONIBLE
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="obtenerHorariosOcupados_debe_listar_correctamente" classname="controlador.CitaControllerTest" time="0.021">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-274EDF47
+✅ Cita guardada: CITA-274EDF47
+✅ Cita guardada exitosamente en MongoDB
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 14:00
+🆕 Cita creada con código: CITA-9456725C
+✅ Cita guardada: CITA-9456725C
+✅ Cita guardada exitosamente en MongoDB
+🕐 Horarios ocupados para Dr. Juan Pérez el 2026-02-03: 2
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="cancelarCita_debe_rechazar_codigo_invalido" classname="controlador.CitaControllerTest" time="0.006">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+🗑️ Intentando cancelar cita: CITA-NOEXISTE
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+    <system-err><![CDATA[❌ Cita no encontrada: CITA-NOEXISTE
+]]></system-err>
+  </testcase>
+  <testcase name="cancelarCita_debe_funcionar_con_codigo_valido" classname="controlador.CitaControllerTest" time="0.018">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-A7A64A2C
+✅ Cita guardada: CITA-A7A64A2C
+✅ Cita guardada exitosamente en MongoDB
+🗑️ Intentando cancelar cita: CITA-A7A64A2C
+✅ Cita actualizada: CITA-A7A64A2C
+✅ Cita cancelada exitosamente
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="buscarCitaPorCodigo_debe_retornar_null_con_codigo_invalido" classname="controlador.CitaControllerTest" time="0.009">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+🔎 Búsqueda por código CITA-NOEXISTE: NO ENCONTRADA
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="buscarCitaPorCodigo_debe_retornar_cita_correcta" classname="controlador.CitaControllerTest" time="0.01">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-D3845A22
+✅ Cita guardada: CITA-D3845A22
+✅ Cita guardada exitosamente en MongoDB
+🔎 Búsqueda por código CITA-D3845A22: ENCONTRADA
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="obtenerEstadisticas_debe_calcular_correctamente" classname="controlador.CitaControllerTest" time="0.033">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-F8043380
+✅ Cita guardada: CITA-F8043380
+✅ Cita guardada exitosamente en MongoDB
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dra. María González
+   - Fecha: 2026-02-03
+   - Hora: 14:00
+🆕 Cita creada con código: CITA-959D089C
+✅ Cita guardada: CITA-959D089C
+✅ Cita guardada exitosamente en MongoDB
+📈 Estadísticas - P:2 A:0 C:0 N:0
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="obtenerTodasLasCitas_debe_retornar_lista_completa" classname="controlador.CitaControllerTest" time="0.012">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-6653BF41
+✅ Cita guardada: CITA-6653BF41
+✅ Cita guardada exitosamente en MongoDB
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dra. María González
+   - Fecha: 2026-02-03
+   - Hora: 14:00
+🆕 Cita creada con código: CITA-94334A84
+✅ Cita guardada: CITA-94334A84
+✅ Cita guardada exitosamente en MongoDB
+📊 Total de citas: 2
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
+  <testcase name="obtenerCitasPendientes_debe_filtrar_correctamente" classname="controlador.CitaControllerTest" time="0.013">
+    <system-out><![CDATA[✅ CitaController inicializado con MongoDB
+⚠️ Todas las citas han sido eliminadas
+
+🧹 Base de datos limpiada para el test
+
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dr. Juan Pérez
+   - Fecha: 2026-02-03
+   - Hora: 10:00
+🆕 Cita creada con código: CITA-5902C6A1
+✅ Cita guardada: CITA-5902C6A1
+✅ Cita guardada exitosamente en MongoDB
+📝 Intentando agendar cita:
+   - Servicio: Consulta
+   - Personal: Dra. María González
+   - Fecha: 2026-02-03
+   - Hora: 14:00
+🆕 Cita creada con código: CITA-DD0ADEC1
+✅ Cita guardada: CITA-DD0ADEC1
+✅ Cita guardada exitosamente en MongoDB
+⏳ Citas pendientes: 2
+⚠️ Todas las citas han sido eliminadas
+🧹 Base de datos limpiada después del test
+
+]]></system-out>
+  </testcase>
 </testsuite>

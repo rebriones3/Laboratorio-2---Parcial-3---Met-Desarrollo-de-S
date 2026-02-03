@@ -1,4 +1,5 @@
 controlador\CitaControllerTest.class
+modelo\TestConexionMongoDB.class
 modelo\ValidadorCitasTest.class
 modelo\RepositorioCitasTest.class
 modelo\CitaTest.class

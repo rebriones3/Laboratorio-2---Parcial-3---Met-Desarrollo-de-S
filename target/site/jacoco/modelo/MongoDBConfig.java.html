@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MongoDBConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p3lab2brionesestefany</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">MongoDBConfig.java</span></div><h1>MongoDBConfig.java</h1><pre class="source lang-java linenums">package modelo;
+
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+
+/**
+ * Configuración de conexión a MongoDB
+ * Gestiona la conexión y proporciona acceso a la base de datos
+ * MEJORADO: Mejor manejo de errores y mensajes informativos
+ */
+public class MongoDBConfig {
+    
+    private static MongoDBConfig instancia;
+    private MongoClient mongoClient;
+    private MongoDatabase database;
+<span class="fc" id="L24">    private boolean conectado = false;</span>
+    
+    // Configuración de conexión
+    private static final String CONNECTION_STRING = &quot;mongodb://localhost:27017&quot;;
+    private static final String DATABASE_NAME = &quot;sistema_citas&quot;;
+    
+    /**
+     * Constructor privado (Singleton)
+     */
+<span class="fc" id="L33">    private MongoDBConfig() {</span>
+        try {
+<span class="fc" id="L35">            System.out.println(&quot;\n&quot; + &quot;=&quot;.repeat(60));</span>
+<span class="fc" id="L36">            System.out.println(&quot;🔌 INICIANDO CONEXIÓN A MONGODB&quot;);</span>
+<span class="fc" id="L37">            System.out.println(&quot;=&quot;.repeat(60));</span>
+            
+            // Configurar el codec para trabajar con POJOs (Plain Old Java Objects)
+<span class="fc" id="L40">            CodecRegistry pojoCodecRegistry = fromProviders(</span>
+<span class="fc" id="L41">                PojoCodecProvider.builder().automatic(true).build()</span>
+            );
+            
+<span class="fc" id="L44">            CodecRegistry codecRegistry = fromRegistries(</span>
+<span class="fc" id="L45">                MongoClientSettings.getDefaultCodecRegistry(),</span>
+                pojoCodecRegistry
+            );
+            
+            // Configurar settings de MongoDB
+<span class="fc" id="L50">            MongoClientSettings settings = MongoClientSettings.builder()</span>
+<span class="fc" id="L51">                .applyConnectionString(new ConnectionString(CONNECTION_STRING))</span>
+<span class="fc" id="L52">                .codecRegistry(codecRegistry)</span>
+<span class="fc" id="L53">                .build();</span>
+            
+<span class="fc" id="L55">            System.out.println(&quot;⚙️  Configuración establecida&quot;);</span>
+<span class="fc" id="L56">            System.out.println(&quot;   URL: &quot; + CONNECTION_STRING);</span>
+<span class="fc" id="L57">            System.out.println(&quot;   Base de datos: &quot; + DATABASE_NAME);</span>
+            
+            // Crear cliente MongoDB
+<span class="fc" id="L60">            mongoClient = MongoClients.create(settings);</span>
+            
+            // Obtener base de datos
+<span class="fc" id="L63">            database = mongoClient.getDatabase(DATABASE_NAME);</span>
+            
+            // Verificar conexión
+<span class="fc" id="L66">            database.listCollectionNames().first();</span>
+<span class="fc" id="L67">            conectado = true;</span>
+            
+<span class="fc" id="L69">            System.out.println(&quot;✅ CONEXIÓN EXITOSA&quot;);</span>
+<span class="fc" id="L70">            System.out.println(&quot;📁 Base de datos activa: &quot; + DATABASE_NAME);</span>
+<span class="fc" id="L71">            System.out.println(&quot;=&quot;.repeat(60) + &quot;\n&quot;);</span>
+            
+<span class="nc" id="L73">        } catch (Exception e) {</span>
+<span class="nc" id="L74">            conectado = false;</span>
+<span class="nc" id="L75">            System.err.println(&quot;\n&quot; + &quot;=&quot;.repeat(60));</span>
+<span class="nc" id="L76">            System.err.println(&quot;❌ ERROR AL CONECTAR CON MONGODB&quot;);</span>
+<span class="nc" id="L77">            System.err.println(&quot;=&quot;.repeat(60));</span>
+<span class="nc" id="L78">            System.err.println(&quot;Mensaje: &quot; + e.getMessage());</span>
+<span class="nc" id="L79">            System.err.println(&quot;\n💡 POSIBLES SOLUCIONES:&quot;);</span>
+<span class="nc" id="L80">            System.err.println(&quot;   1. Verifica que MongoDB esté ejecutándose&quot;);</span>
+<span class="nc" id="L81">            System.err.println(&quot;   2. En Windows: net start MongoDB&quot;);</span>
+<span class="nc" id="L82">            System.err.println(&quot;   3. En Linux/Mac: sudo systemctl start mongod&quot;);</span>
+<span class="nc" id="L83">            System.err.println(&quot;   4. Verifica que el puerto 27017 esté disponible&quot;);</span>
+<span class="nc" id="L84">            System.err.println(&quot;=&quot;.repeat(60) + &quot;\n&quot;);</span>
+<span class="nc" id="L85">            e.printStackTrace();</span>
+<span class="fc" id="L86">        }</span>
+<span class="fc" id="L87">    }</span>
+    
+    /**
+     * Obtiene la instancia única de la configuración (Singleton)
+     */
+    public static MongoDBConfig obtenerInstancia() {
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (instancia == null) {</span>
+<span class="fc" id="L94">            synchronized (MongoDBConfig.class) {</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">                if (instancia == null) {</span>
+<span class="fc" id="L96">                    instancia = new MongoDBConfig();</span>
+                }
+<span class="fc" id="L98">            }</span>
+        }
+<span class="fc" id="L100">        return instancia;</span>
+    }
+    
+    /**
+     * Obtiene la base de datos de MongoDB
+     */
+    public MongoDatabase getDatabase() {
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (!conectado) {</span>
+<span class="nc" id="L108">            System.err.println(&quot;⚠️ WARNING: Intentando usar base de datos sin conexión activa&quot;);</span>
+        }
+<span class="fc" id="L110">        return database;</span>
+    }
+    
+    /**
+     * Obtiene el cliente de MongoDB
+     */
+    public MongoClient getMongoClient() {
+<span class="nc" id="L117">        return mongoClient;</span>
+    }
+    
+    /**
+     * Cierra la conexión a MongoDB
+     */
+    public void cerrarConexion() {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (mongoClient != null) {</span>
+<span class="nc" id="L125">            mongoClient.close();</span>
+<span class="nc" id="L126">            conectado = false;</span>
+<span class="nc" id="L127">            System.out.println(&quot;🔌 Conexión a MongoDB cerrada&quot;);</span>
+        }
+<span class="nc" id="L129">    }</span>
+    
+    /**
+     * Verifica si la conexión está activa
+     */
+    public boolean estaConectado() {
+        try {
+<span class="nc bnc" id="L136" title="All 4 branches missed.">            if (mongoClient != null &amp;&amp; database != null) {</span>
+                // Intentar listar colecciones para verificar conexión
+<span class="nc" id="L138">                database.listCollectionNames().first();</span>
+<span class="nc" id="L139">                conectado = true;</span>
+<span class="nc" id="L140">                return true;</span>
+            }
+<span class="nc" id="L142">        } catch (Exception e) {</span>
+<span class="nc" id="L143">            conectado = false;</span>
+<span class="nc" id="L144">            System.err.println(&quot;⚠️ Error al verificar conexión: &quot; + e.getMessage());</span>
+<span class="nc" id="L145">        }</span>
+<span class="nc" id="L146">        return false;</span>
+    }
+    
+    /**
+     * Muestra el estado de la conexión
+     */
+    public void mostrarEstado() {
+<span class="nc" id="L153">        System.out.println(&quot;\n&quot; + &quot;-&quot;.repeat(60));</span>
+<span class="nc" id="L154">        System.out.println(&quot;📊 ESTADO DE CONEXIÓN MONGODB&quot;);</span>
+<span class="nc" id="L155">        System.out.println(&quot;-&quot;.repeat(60));</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        System.out.println(&quot;Estado: &quot; + (conectado ? &quot;✅ CONECTADO&quot; : &quot;❌ DESCONECTADO&quot;));</span>
+<span class="nc" id="L157">        System.out.println(&quot;URL: &quot; + CONNECTION_STRING);</span>
+<span class="nc" id="L158">        System.out.println(&quot;Base de datos: &quot; + DATABASE_NAME);</span>
+        
+<span class="nc bnc" id="L160" title="All 4 branches missed.">        if (conectado &amp;&amp; database != null) {</span>
+            try {
+<span class="nc" id="L162">                long count = database.getCollection(&quot;citas&quot;, CitaDTO.class).countDocuments();</span>
+<span class="nc" id="L163">                System.out.println(&quot;Documentos en colección 'citas': &quot; + count);</span>
+<span class="nc" id="L164">            } catch (Exception e) {</span>
+<span class="nc" id="L165">                System.err.println(&quot;Error al contar documentos: &quot; + e.getMessage());</span>
+<span class="nc" id="L166">            }</span>
+        }
+<span class="nc" id="L168">        System.out.println(&quot;-&quot;.repeat(60) + &quot;\n&quot;);</span>
+<span class="nc" id="L169">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

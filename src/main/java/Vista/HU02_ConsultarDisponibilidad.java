@@ -33,18 +33,6 @@ public class HU02_ConsultarDisponibilidad extends JFrame {
         LocalTime.of(8, 0), LocalTime.of(9, 0), LocalTime.of(10, 0), LocalTime.of(11, 0),
         LocalTime.of(14, 0), LocalTime.of(15, 0), LocalTime.of(16, 0), LocalTime.of(17, 0)
     };
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                HU02_ConsultarDisponibilidad frame = new HU02_ConsultarDisponibilidad();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
     public HU02_ConsultarDisponibilidad() {
         setTitle("Sistema de Gestión de Citas - Consultar Disponibilidad");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

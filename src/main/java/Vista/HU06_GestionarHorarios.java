@@ -11,29 +11,10 @@ public class HU06_GestionarHorarios extends JFrame {
     private JPanel contentPane;
     private JTable tablaHorarios;
     private DefaultTableModel modeloTabla;
-    
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    HU06_GestionarHorarios frame = new HU06_GestionarHorarios();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-    
-    /**
-     * Create the frame.
-     */
+ 
     public HU06_GestionarHorarios() {
         setTitle("Sistema de Gestión de Citas - Gestionar Horarios de Atención");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 1200, 750);
         
         contentPane = new JPanel();

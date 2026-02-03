@@ -19,19 +19,7 @@ public class HU09_HistorialCitas extends JFrame {
     
     private CitaController controller;
     private JLabel lblTotalCitas, lblAtendidas, lblPendientes, lblCanceladas;
-    
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    HU09_HistorialCitas frame = new HU09_HistorialCitas();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+ 
     
     public HU09_HistorialCitas() {
         setTitle("Sistema de Gestión de Citas - Historial de Citas");

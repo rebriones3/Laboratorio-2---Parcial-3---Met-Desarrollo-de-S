@@ -20,17 +20,6 @@ public class HU04_CancelarCita extends JFrame {
     
     private CitaController controller;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                HU04_CancelarCita frame = new HU04_CancelarCita();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
     public HU04_CancelarCita() {
         setTitle("Sistema de Gestión de Citas - Cancelar Cita");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

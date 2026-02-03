@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CitaDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">p3lab2brionesestefany</a> &gt; <a href="index.source.html" class="el_package">modelo</a> &gt; <span class="el_source">CitaDTO.java</span></div><h1>CitaDTO.java</h1><pre class="source lang-java linenums">package modelo;
+
+/**
+ * Data Transfer Object (DTO) para Cita
+ * Se usa para el mapeo con MongoDB ya que LocalDate y LocalTime
+ * no son directamente serializables por el driver de MongoDB
+ */
+public class CitaDTO {
+    
+    private String codigo;
+    private String servicio;
+    private String personal;
+    private String fecha;        // String en formato ISO (yyyy-MM-dd)
+    private String hora;         // String en formato ISO (HH:mm)
+    private String motivo;
+    private String estado;       // String del enum EstadoCita
+    private String fechaCreacion; // String del LocalDateTime
+    
+    // Constructor vacío requerido por MongoDB
+<span class="fc" id="L20">    public CitaDTO() {</span>
+<span class="fc" id="L21">    }</span>
+    
+    // Constructor completo
+    public CitaDTO(String codigo, String servicio, String personal, 
+                   String fecha, String hora, String motivo, 
+<span class="nc" id="L26">                   String estado, String fechaCreacion) {</span>
+<span class="nc" id="L27">        this.codigo = codigo;</span>
+<span class="nc" id="L28">        this.servicio = servicio;</span>
+<span class="nc" id="L29">        this.personal = personal;</span>
+<span class="nc" id="L30">        this.fecha = fecha;</span>
+<span class="nc" id="L31">        this.hora = hora;</span>
+<span class="nc" id="L32">        this.motivo = motivo;</span>
+<span class="nc" id="L33">        this.estado = estado;</span>
+<span class="nc" id="L34">        this.fechaCreacion = fechaCreacion;</span>
+<span class="nc" id="L35">    }</span>
+    
+    // Getters y Setters
+    
+    public String getCodigo() {
+<span class="fc" id="L40">        return codigo;</span>
+    }
+    
+    public void setCodigo(String codigo) {
+<span class="fc" id="L44">        this.codigo = codigo;</span>
+<span class="fc" id="L45">    }</span>
+    
+    public String getServicio() {
+<span class="fc" id="L48">        return servicio;</span>
+    }
+    
+    public void setServicio(String servicio) {
+<span class="fc" id="L52">        this.servicio = servicio;</span>
+<span class="fc" id="L53">    }</span>
+    
+    public String getPersonal() {
+<span class="fc" id="L56">        return personal;</span>
+    }
+    
+    public void setPersonal(String personal) {
+<span class="fc" id="L60">        this.personal = personal;</span>
+<span class="fc" id="L61">    }</span>
+    
+    public String getFecha() {
+<span class="fc" id="L64">        return fecha;</span>
+    }
+    
+    public void setFecha(String fecha) {
+<span class="fc" id="L68">        this.fecha = fecha;</span>
+<span class="fc" id="L69">    }</span>
+    
+    public String getHora() {
+<span class="fc" id="L72">        return hora;</span>
+    }
+    
+    public void setHora(String hora) {
+<span class="fc" id="L76">        this.hora = hora;</span>
+<span class="fc" id="L77">    }</span>
+    
+    public String getMotivo() {
+<span class="fc" id="L80">        return motivo;</span>
+    }
+    
+    public void setMotivo(String motivo) {
+<span class="fc" id="L84">        this.motivo = motivo;</span>
+<span class="fc" id="L85">    }</span>
+    
+    public String getEstado() {
+<span class="fc" id="L88">        return estado;</span>
+    }
+    
+    public void setEstado(String estado) {
+<span class="fc" id="L92">        this.estado = estado;</span>
+<span class="fc" id="L93">    }</span>
+    
+    public String getFechaCreacion() {
+<span class="fc" id="L96">        return fechaCreacion;</span>
+    }
+    
+    public void setFechaCreacion(String fechaCreacion) {
+<span class="fc" id="L100">        this.fechaCreacion = fechaCreacion;</span>
+<span class="fc" id="L101">    }</span>
+    
+    @Override
+    public String toString() {
+<span class="nc" id="L105">        return &quot;CitaDTO{&quot; +</span>
+                &quot;codigo='&quot; + codigo + '\'' +
+                &quot;, servicio='&quot; + servicio + '\'' +
+                &quot;, personal='&quot; + personal + '\'' +
+                &quot;, fecha='&quot; + fecha + '\'' +
+                &quot;, hora='&quot; + hora + '\'' +
+                &quot;, estado='&quot; + estado + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

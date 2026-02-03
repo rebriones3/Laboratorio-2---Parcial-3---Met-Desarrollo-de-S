@@ -38,18 +38,7 @@ public class HU01_AgendarCita extends JFrame {
         LocalTime.of(16, 0), LocalTime.of(16, 30), LocalTime.of(17, 0), LocalTime.of(17, 30)
     };
     
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    HU01_AgendarCita frame = new HU01_AgendarCita();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+    
     
     public HU01_AgendarCita() {
         setTitle("Sistema de Gestión de Citas - Agendar Nueva Cita");
