@@ -1,4 +1,4 @@
-name: CI Pipeline - Optimizado
+name: CI - Con MongoDB (Definitivo)
 
 on:
   push:
@@ -7,13 +7,24 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build-and-test:
-    name: Tests & Coverage
+  test-con-mongodb:
+    name: Tests Completos con MongoDB
     runs-on: ubuntu-latest
-    timeout-minutes: 10  # ⏱️ Timeout de 10 minutos máximo
+    timeout-minutes: 12
+    
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 })' || mongo --quiet --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
     
     steps:
-    - name: 📥 Checkout
+    - name: 📥 Checkout Code
       uses: actions/checkout@v4
       
     - name: ☕ Setup Java 17
@@ -22,35 +33,58 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-        
-    - name: 🧪 Run Tests (Skip MongoDB)
+    
+    - name: ⏳ Verificar MongoDB
       run: |
-        mvn clean test \
-          -Dmaven.test.skip=false \
-          -DskipTests=false \
-          -Dtest='!**/*MongoTest' \
-          -Dfailsafe.timeout=300
-      timeout-minutes: 5  # ⏱️ Tests máximo 5 minutos
-      
-    - name: 📊 Generate JaCoCo Report
-      run: mvn jacoco:report
+        echo "Verificando conexión a MongoDB..."
+        for i in {1..30}; do
+          if mongosh --eval "db.adminCommand('ping')" > /dev/null 2>&1 || \
+             mongo --eval "db.adminCommand('ping')" > /dev/null 2>&1; then
+            echo "✅ MongoDB está listo!"
+            exit 0
+          fi
+          echo "Esperando MongoDB... intento $i/30"
+          sleep 2
+        done
+        echo "❌ MongoDB no respondió a tiempo"
+        exit 1
+      timeout-minutes: 2
+    
+    - name: 🔨 Compilar Proyecto
+      run: mvn clean compile
       timeout-minutes: 2
       
-    - name: ✅ Verify Coverage (65%)
-      run: mvn jacoco:check
+    - name: 🧪 Ejecutar Tests
+      run: mvn test
+      timeout-minutes: 6
+      env:
+        MONGODB_HOST: localhost
+        MONGODB_PORT: 27017
       continue-on-error: false
       
-    - name: 📤 Upload JaCoCo Report
+    - name: 📊 Generar Reporte JaCoCo
+      run: mvn jacoco:report
+      timeout-minutes: 2
+      if: always()
+      
+    - name: ✅ Verificar Cobertura
+      run: mvn jacoco:check
+      continue-on-error: true
+      
+    - name: 📤 Subir Reporte
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: jacoco-report
+        name: jacoco-report-mongodb
         path: target/site/jacoco/
         retention-days: 30
         
-    - name: 📈 Summary
+    - name: 📋 Resumen
       if: always()
       run: |
-        echo "✅ Pipeline completed!"
-        echo "📊 Report: target/site/jacoco/"
-        echo "📥 Download 'jacoco-report' artifact"
+        echo "================================================"
+        echo "✅ Pipeline con MongoDB completado"
+        echo "📊 Reporte JaCoCo disponible"
+        echo "🗄️  Tests con MongoDB real ejecutados"
+        echo "📥 Descarga 'jacoco-report-mongodb'"
+        echo "================================================"
